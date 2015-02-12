@@ -7,13 +7,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $klein = new \Klein\Klein();
 
-$db_host = $_ENV['OPENSHIFT_DB_HOST'];
-$db_user = $_ENV['OPENSHIFT_DB_USERNAME'];
-$db_pass = $_ENV['OPENSHIFT_DB_PASSWORD'];
+$db_host = $_ENV['OPENSHIFT_MYSQL_DB_HOST'];
+$db_user = $_ENV['OPENSHIFT_MYSQL_DB_USERNAME'];
+$db_pass = $_ENV['OPENSHIFT_MYSQL_DB_PASSWORD'];
 $db_name = $_ENV['OPENSHIFT_APP_NAME'];
-$db_port = $_ENV['OPENSHIFT_DB_PORT'];
-
-die(var_dump($GLOBALS));
+$db_port = $_ENV['OPENSHIFT_MYSQL_DB_PORT'];
 
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
