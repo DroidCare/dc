@@ -7,7 +7,7 @@ Params:
 # password
 
 Return (JSON):
-# status: 1 on success, 0 otherwise
+# status: 0 on success, -1 otherwise
 # message: array of success/error messages
 
 */
@@ -36,15 +36,15 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
         }
         if ($num_rows === 1) {
             $service->flash("User successfully logged in.", 'success');
-            $return['status'] = 1;
+            $return['status'] = 0;
             $return['message'] = $service->flashes('success');
         } else {
             $service->flash("Wrong e-mail address or password.", 'error');
-            $return['status'] = 0;
+            $return['status'] = -1;
             $return['message'] = $service->flashes('error');
         }
     } else {
-        $return['status'] = 0;
+        $return['status'] = -1;
         $return['message'] = $error_msg;
     }
     return json_encode($return);

@@ -13,7 +13,7 @@ Params:
 # date_of_birth
 
 Return (JSON):
-# status: 1 on success, 0 otherwise
+# status: 0 on success, -1 otherwise
 # message: array of success/error messages
 
 
@@ -28,6 +28,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $passport_number = $mysqli->escape_string($request->param('passport_number'));
     $nationality = $mysqli->escape_string($request->param('nationality'));
     $date_of_birth = $mysqli->escape_string($request->param('date_of_birth'));
+    $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
 
     $date_of_birth = date("Y-m-d H:i:s", strtotime($date_of_birth));
 
@@ -57,28 +58,28 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
         $stmt->close();
     }
-    if ($num_rows !== 1) {
+    if ($num_rows === 1) {
         $service->flash("E-mail already in use, please use another e-mail.", 'error');
     }
     $error_msg = $service->flashes('error');
 
     if (empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
-        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`)
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `type`)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("ssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth);
+            $stmt->bind_param("sssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $type);
             $res = $stmt->execute();
             $stmt->close();
             if ($res) {
                 $service->flash("User successfully registered.", 'success');
             }
         }
-        $return['status'] = 1;
+        $return['status'] = 0;
         $return['message'] = $service->flashes('success');
     } else {
-        $return['status'] = 0;
+        $return['status'] = -1;
         $return['message'] = $error_msg;
     }
     return json_encode($return);

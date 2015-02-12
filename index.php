@@ -15,13 +15,15 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         // $klein->service()->back();
 
     });
+    var_dump($_ENV);
 
-    $db_url         = 'localhost';
-    $db_username    = 'root';
-    $db_password    = '';
-    $db_name        = 'droidcare';
+    $db_host = $_ENV['OPENSHIFT_DB_HOST'];
+    $db_user = $_ENV['OPENSHIFT_DB_USERNAME'];
+    $db_pass = $_ENV['OPENSHIFT_DB_PASSWORD'];
+    $db_name = $_ENV['OPENSHIFT_APP_NAME'];
+    $db_port = $_ENV['OPENSHIFT_DB_PORT'];
 
-    $app->db = new mysqli($db_url, $db_username, $db_password, $db_name);
+    $app->db = new mysqli($db_url, $db_user, $db_pass, $db_name);
 
 });
 foreach(array('register', 'login') as $controller) {
