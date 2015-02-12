@@ -16,11 +16,11 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $email = $mysqli->escape_string($request->param('email'));
     $password = $mysqli->escape_string($request->param('password'));
 
-    if (empty(trim($email)))    $service->flash("Please enter your e-mail address.", 'error');
-    if (empty($password))       $service->flash("Please enter your password.", 'error');
+    if (is_empty(trim($email)))    $service->flash("Please enter your e-mail address.", 'error');
+    if (is_empty($password))       $service->flash("Please enter your password.", 'error');
     $error_msg = $service->flashes('error');
 
-    if (empty($error_msg)) {
+    if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
         $sql_query = "SELECT `email`, `password` FROM `user` WHERE `email` = ? AND `password` = ?";
         $stmt = $mysqli->prepare($sql_query);

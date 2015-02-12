@@ -2,7 +2,10 @@
 // https://github.com/chriso/klein.php/issues/176
 # $base  = dirname($_SERVER['PHP_SELF']);
 # if (ltrim($base, '/')) $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], strlen($base));
-
+// http://stackoverflow.com/questions/1075534/cant-use-method-return-value-in-write-context
+function is_empty($var) {
+    return empty($var);
+}
 require_once __DIR__ . '/vendor/autoload.php';
 
 $klein = new \Klein\Klein();

@@ -35,13 +35,13 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     // error checking
     if (strlen($password) < 6)          $service->flash("Your password must be more than 6 characters.", 'error');
     else if (strlen($password) > 32)    $service->flash("Your password must be less than 32 characters.", 'error');
-    if (empty(trim($full_name)))        $service->flash("Please enter your full name.", 'error');
-    if (empty(trim($email)))            $service->flash("Please enter your e-mail address.", 'error');
-    if (empty(trim($address)))          $service->flash("Please enter your address.", 'error');
-    if (empty(trim($gender)))           $service->flash("Please specify your gender.", 'error');
-    if (empty(trim($passport_number)))  $service->flash("Please enter your passport number.", 'error');
-    if (empty(trim($nationality)))      $service->flash("Please enter your nationality.", 'error');
-    if (empty(trim($date_of_birth)))    $service->flash("Please enter your date of birth.", 'error');
+    if (is_empty(trim($full_name)))        $service->flash("Please enter your full name.", 'error');
+    if (is_empty(trim($email)))            $service->flash("Please enter your e-mail address.", 'error');
+    if (is_empty(trim($address)))          $service->flash("Please enter your address.", 'error');
+    if (is_empty(trim($gender)))           $service->flash("Please specify your gender.", 'error');
+    if (is_empty(trim($passport_number)))  $service->flash("Please enter your passport number.", 'error');
+    if (is_empty(trim($nationality)))      $service->flash("Please enter your nationality.", 'error');
+    if (is_empty(trim($date_of_birth)))    $service->flash("Please enter your date of birth.", 'error');
     if (($dob_timestamp = strtotime($date_of_birth)) === false)
                                         $service->flash("Please enter a valid date of birth (YYYY-MM-DD).", 'error');
     $date_of_birth = date("Y-m-d H:i:s", $dob_timestamp);
@@ -63,7 +63,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     }
     $error_msg = $service->flashes('error');
 
-    if (empty($error_msg)) {
+    if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
         $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `type`)
                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
