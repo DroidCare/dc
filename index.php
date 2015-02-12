@@ -13,6 +13,8 @@ $db_pass = $_ENV['OPENSHIFT_DB_PASSWORD'];
 $db_name = $_ENV['OPENSHIFT_APP_NAME'];
 $db_port = $_ENV['OPENSHIFT_DB_PORT'];
 
+die(var_dump($GLOBALS));
+
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
     $klein->onError(function ($klein, $err_msg) {
