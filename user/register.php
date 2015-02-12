@@ -34,17 +34,19 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
 
     // error checking
-    if (strlen($password) < 6)          $service->flash("Your password must be more than 6 characters.", 'error');
-    else if (strlen($password) > 32)    $service->flash("Your password must be less than 32 characters.", 'error');
-    if (is_empty(trim($full_name)))        $service->flash("Please enter your full name.", 'error');
-    if (is_empty(trim($email)))            $service->flash("Please enter your e-mail address.", 'error');
-    if (is_empty(trim($address)))          $service->flash("Please enter your address.", 'error');
-    if (is_empty(trim($gender)))           $service->flash("Please specify your gender.", 'error');
-    if (is_empty(trim($passport_number)))  $service->flash("Please enter your passport number.", 'error');
-    if (is_empty(trim($nationality)))      $service->flash("Please enter your nationality.", 'error');
-    if (is_empty(trim($date_of_birth)))    $service->flash("Please enter your date of birth.", 'error');
+    if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
+    else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');
+    if (is_empty(trim($full_name)))         $service->flash("Please enter your full name.", 'error');
+    if (is_empty(trim($email)))             $service->flash("Please enter your e-mail address.", 'error');
+    if (!filter_var($email_a, FILTER_VALIDATE_EMAIL))
+                                            $service->flash("Please enter a valid e-mail address.", 'error');
+    if (is_empty(trim($address)))           $service->flash("Please enter your address.", 'error');
+    if (is_empty(trim($gender)))            $service->flash("Please specify your gender.", 'error');
+    if (is_empty(trim($passport_number)))   $service->flash("Please enter your passport number.", 'error');
+    if (is_empty(trim($nationality)))       $service->flash("Please enter your nationality.", 'error');
+    if (is_empty(trim($date_of_birth)))     $service->flash("Please enter your date of birth.", 'error');
     if (($dob_timestamp = strtotime($date_of_birth)) === false)
-                                        $service->flash("Please enter a valid date of birth (YYYY-MM-DD).", 'error');
+                                            $service->flash("Please enter a valid date of birth (YYYY-MM-DD).", 'error');
     $date_of_birth = date("Y-m-d", $dob_timestamp);
 
     $num_rows = 0;

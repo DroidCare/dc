@@ -47,7 +47,7 @@ POST /user/login
 
 #### Return
 * status: 0 on success, -1 otherwise
-* message: array of success/error messages
+* message: array of error messages; or session_id() if success
 
 ### View User Details
 ```

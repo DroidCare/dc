@@ -19,8 +19,10 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $email = $mysqli->escape_string($request->param('email'));
     $password = $mysqli->escape_string($request->param('password'));
 
-    if (is_empty(trim($email)))    $service->flash("Please enter your e-mail address.", 'error');
-    if (is_empty($password))       $service->flash("Please enter your password.", 'error');
+    if (is_empty(trim($email))) $service->flash("Please enter your e-mail address.", 'error');
+    if (!filter_var($email_a, FILTER_VALIDATE_EMAIL))
+                                $service->flash("Please enter a valid e-mail address.", 'error');
+    if (is_empty($password))    $service->flash("Please enter your password.", 'error');
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
