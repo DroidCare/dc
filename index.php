@@ -7,6 +7,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $klein = new \Klein\Klein();
 
+$db_host = $_ENV['OPENSHIFT_DB_HOST'];
+$db_user = $_ENV['OPENSHIFT_DB_USERNAME'];
+$db_pass = $_ENV['OPENSHIFT_DB_PASSWORD'];
+$db_name = $_ENV['OPENSHIFT_APP_NAME'];
+$db_port = $_ENV['OPENSHIFT_DB_PORT'];
+
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
     $klein->onError(function ($klein, $err_msg) {
@@ -15,15 +21,8 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         // $klein->service()->back();
 
     });
-    var_dump($_ENV);
 
-    $db_host = $_ENV['OPENSHIFT_DB_HOST'];
-    $db_user = $_ENV['OPENSHIFT_DB_USERNAME'];
-    $db_pass = $_ENV['OPENSHIFT_DB_PASSWORD'];
-    $db_name = $_ENV['OPENSHIFT_APP_NAME'];
-    $db_port = $_ENV['OPENSHIFT_DB_PORT'];
-
-    $app->db = new mysqli($db_url, $db_user, $db_pass, $db_name);
+    $app->db = new mysqli($GLOBALS['db_url'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
 
 });
 foreach(array('register', 'login') as $controller) {
