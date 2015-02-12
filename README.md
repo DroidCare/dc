@@ -1,12 +1,23 @@
-## URL
-https://dc-kenrick95.rhcloud.com/
+# DroidCare (Back-end)
+## Description
+For CZ2006 Software Engineering project at Nanyang Technological University (A.Y. 2014-2015 semester 2).
 
-## Register
+## Dependency
+* [klein.php](https://github.com/chriso/klein.php)
+
+## REST API Documentation
+
+### Request URL
+```
+https://dc-kenrick95.rhcloud.com/
+```
+
+### Register
 ```
 POST /user/register
 ```
 
-### Params
+#### Params
 * email
 * password
 * full_name
@@ -16,19 +27,19 @@ POST /user/register
 * nationality
 * date_of_birth
 
-### Return (JSON):
+#### Return (JSON):
 * status: 0 on success, -1 otherwise
 * message: array of success/error messages
 
-## Login
+### Login
 ```
 POST /user/login
 ```
 
-### Params:
+#### Params:
 * email
 * password
 
-### Return (JSON):
+#### Return (JSON):
 * status: 0 on success, -1 otherwise
 * message: array of success/error messages
