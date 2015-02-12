@@ -22,7 +22,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
 
     });
 
-    $app->db = new mysqli($GLOBALS['db_url'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
+    $app->db = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
 
 });
 foreach(array('register', 'login') as $controller) {
