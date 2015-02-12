@@ -30,8 +30,6 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $date_of_birth = $mysqli->escape_string($request->param('date_of_birth'));
     $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
 
-    $date_of_birth = date("Y-m-d H:i:s", strtotime($date_of_birth));
-
     // error checking
     if (strlen($password) < 6)          $service->flash("Your password must be more than 6 characters.", 'error');
     else if (strlen($password) > 32)    $service->flash("Your password must be less than 32 characters.", 'error');
@@ -44,7 +42,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty(trim($date_of_birth)))    $service->flash("Please enter your date of birth.", 'error');
     if (($dob_timestamp = strtotime($date_of_birth)) === false)
                                         $service->flash("Please enter a valid date of birth (YYYY-MM-DD).", 'error');
-    $date_of_birth = date("Y-m-d H:i:s", $dob_timestamp);
+    $date_of_birth = date("Y-m-d", $dob_timestamp);
 
     $num_rows = 0;
     $sql_query = "SELECT * FROM `user` WHERE `email` = ?";
