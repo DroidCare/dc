@@ -7,12 +7,12 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $klein = new \Klein\Klein();
 
-$db_host = $_SERVER['OPENSHIFT_MYSQL_DB_HOST'];
-$db_user = $_SERVER['OPENSHIFT_MYSQL_DB_USERNAME'];
-$db_pass = $_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD'];
-$db_name = $_SERVER['OPENSHIFT_APP_NAME'];
-$db_port = $_SERVER['OPENSHIFT_MYSQL_DB_PORT'];
-    var_dump($GLOBALS);
+$db_host = isset($_SERVER['OPENSHIFT_MYSQL_DB_HOST']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_HOST'] : 'localhost';
+$db_user = isset($_SERVER['OPENSHIFT_MYSQL_DB_USERNAME']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_USERNAME'] : 'root';
+$db_pass = isset($_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD'] : '';
+$db_name = isset($_SERVER['OPENSHIFT_APP_NAME']) ?  $_SERVER['OPENSHIFT_APP_NAME'] : 'droidcare';
+$db_port = isset($_SERVER['OPENSHIFT_MYSQL_DB_PORT']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PORT'] : 3306;
+# var_dump($GLOBALS);
 
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
@@ -22,7 +22,6 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         // $klein->service()->back();
 
     });
-    var_dump("still can");
     $app->db = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
 
 });

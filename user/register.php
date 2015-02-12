@@ -54,7 +54,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
         $res = $stmt->execute();
 
         $stmt->store_result();
-        $num_rows = $res->num_rows();
+        $num_rows = $stmt->num_rows;
 
         $stmt->close();
     }
