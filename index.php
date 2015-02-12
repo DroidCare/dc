@@ -1,7 +1,7 @@
 <?php
 // https://github.com/chriso/klein.php/issues/176
-$base  = dirname($_SERVER['PHP_SELF']);
-if (ltrim($base, '/')) $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], strlen($base));
+# $base  = dirname($_SERVER['PHP_SELF']);
+# if (ltrim($base, '/')) $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], strlen($base));
 
 require_once __DIR__ . '/vendor/autoload.php';
 
