@@ -60,10 +60,10 @@ GET /user/[i:id]
 #### Return
 * status: 0 on success, -1 otherwise
 * message: array of error messages; or object containing the data:
-** email
-** full_name
-** address
-** gender
-** passport_number
-** nationality
-** date_of_birth
+  * email
+  * full_name
+  * address
+  * gender
+  * passport_number
+  * nationality
+  * date_of_birth
