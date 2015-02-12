@@ -10,6 +10,10 @@ All return values are in JSON string format.
 
 ### Request URL
 ```
+https://dc.kenrick95.org/
+```
+or
+```
 https://dc-kenrick95.rhcloud.com/
 ```
 
