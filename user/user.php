@@ -1,11 +1,14 @@
 <?php
 /*
+### View User Details
+```
 GET /user/[i:id]
+```
 
-Params:
-* id
+#### Parameters
+* id [integer]
 
-Return (JSON):
+#### Return
 * status: 0 on success, -1 otherwise
 * message: array of error messages; or object containing the data:
 ** email

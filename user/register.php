@@ -1,20 +1,23 @@
 <?php
 /*
+### Register
+```
 POST /user/register
+```
 
-Params:
-# email
-# password
-# full_name
-# address
-# gender
-# passport_number
-# nationality
-# date_of_birth
+#### Parameters
+* email
+* password
+* full_name
+* address
+* gender
+* passport_number
+* nationality
+* date_of_birth
 
-Return (JSON):
-# status: 0 on success, -1 otherwise
-# message: array of success/error messages
+#### Return
+* status: 0 on success, -1 otherwise
+* message: array of success/error messages
 
 
 */
