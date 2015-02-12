@@ -1,4 +1,4 @@
 RewriteEngine on
-RewriteBase /dc/
+# RewriteBase /dc/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . index.php [L]
