@@ -11,7 +11,7 @@ POST /user/login
 
 #### Return
 * status: 0 on success, -1 otherwise
-* message: array of success/error messages
+* message: array of error messages; or session_id() if success
 
 */
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {
@@ -25,7 +25,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
-        $sql_query = "SELECT * FROM `user` WHERE `email` = ? AND `password` = ?";
+        $sql_query = "SELECT `id` FROM `user` WHERE `email` = ? AND `password` = ?";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
@@ -33,12 +33,17 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             $res = $stmt->execute();
 
             $stmt->store_result();
-            $num_rows = $stmt->num_rows();
+            $num_rows = $stmt->num_rows;
+
+            $stmt->bind_result($user_id);
+            $stmt->fetch();
 
             $stmt->close();
         }
         if ($num_rows === 1) {
-            $service->flash("User successfully logged in.", 'success');
+            $_SESSION['login'] = TRUE;
+            $_SESSION['user_id'] = $user_id;
+            $service->flash(session_id(), 'success');
             $return['status'] = 0;
             $return['message'] = $service->flashes('success');
         } else {

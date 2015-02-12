@@ -26,7 +26,10 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
 
     });
     $app->db = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
-
+    if (!is_empty($request->param('session_id'))) {
+        session_id($request->param('session_id'));
+    }
+    session_start();
 });
 foreach(array('register', 'login') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
