@@ -31,15 +31,6 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
 foreach(array('register', 'login') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
 }
-$klein->respond('GET', '/test/[:name]', function ($request, $response, $service, $app) {
-    // $sql_query = "INSERT INTO test(`name`) VALUES(?)";
-    // $stmt = $app->db->prepare($sql_query);
-
-    // $stmt->bind_param("s", $request->name);
-    // $res = $stmt->execute();
-    // $stmt->close();
-    // var_dump($stmt);
-    return 'Hello World!';
-});
+$klein->with("/user", "user/user.php");
 
 $klein->dispatch();
