@@ -30,7 +30,7 @@ POST /user/register
 * gender
 * passport_number
 * nationality
-* date_of_birth
+* date_of_birth (dd/mm/yyyy)
 
 #### Return
 * status: 0 on success, -1 otherwise
