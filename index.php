@@ -31,7 +31,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     }
     session_start();
 });
-foreach(array('register', 'login') as $controller) {
+foreach(array('register', 'login', 'update') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
 }
 $klein->with("/user", "user/user.php");

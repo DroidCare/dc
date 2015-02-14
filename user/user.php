@@ -2,29 +2,37 @@
 /*
 ### View User Details
 ```
-GET /user/[i:id]
+POST /user/[i:id]
 ```
 
 #### Parameters
 * id [integer]
+* session_id, returned at login
 
 #### Return
 * status: 0 on success, -1 otherwise
 * message: array of error messages; or object containing the data:
-** email
-** full_name
-** address
-** gender
-** passport_number
-** nationality
-** date_of_birth
+  * email
+  * full_name
+  * address
+  * gender
+  * passport_number
+  * nationality
+  * date_of_birth
 
 */
-$this->respond('GET', '/[i:id]', function ($request, $response, $service, $app) {
+$this->respond('POST', '/[i:id]', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
-    $id = $mysqli->escape_string($request->param('id'));
+    $id = intval($mysqli->escape_string($request->param('id')));
+    $session_id = $mysqli->escape_string($request->param('session_id'));
 
-    if (is_empty(trim($id)))    $service->flash("Please enter a user id.", 'error');
+    // error checking
+    if (is_empty(trim($session_id)))    $service->flash("Please log in to view your details.", 'error');
+    if (is_empty(trim($id)))            $service->flash("Please enter a user id.", 'error');
+    // "admin" and "consultant" can see user's details
+    if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
+                                        $service->flash("Sorry, you can't view other patient's details.", 'error');
+
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
@@ -47,11 +55,14 @@ $this->respond('GET', '/[i:id]', function ($request, $response, $service, $app) 
                     "gender" => $gender,
                     "passport_number" => $passport_number,
                     "nationality" => $nationality,
-                    "date_of_birth" => $date_of_birth
+                    "date_of_birth" => $date_of_birth,
+                    "type" => $type
                 );
+
                 $service->flash(json_encode($result), 'success');
                 $return['status'] = 0;
                 $return['message'] = json_decode($service->flashes('success')[0]);
+
             } else {
                 $service->flash("User not found", 'error');
                 $return['status'] = -1;
