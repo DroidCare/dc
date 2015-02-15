@@ -6,19 +6,18 @@ POST /user/register
 ```
 
 #### Parameters
-* email
-* password
-* full_name
-* address
-* gender
-* passport_number
-* nationality
-* date_of_birth (YYYY-MM-DD)
+* `email`
+* `password`
+* `full_name`
+* `address`
+* `gender`
+* `passport_number`
+* `nationality`
+* `date_of_birth` (YYYY-MM-DD)
 
 #### Return
-* status: 0 on success, -1 otherwise
-* message: array of success/error messages
-
+* `status`: 0 on success, -1 otherwise
+* `message`: array of success/error messages
 
 */
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {

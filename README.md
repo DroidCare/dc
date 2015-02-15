@@ -92,4 +92,16 @@ POST /user/update
 
 #### Return
 * `status`: 0 on success, -1 otherwise
-* `message`: array of error/success messages;
+* `message`: array of error/success messages
+
+### Logout
+```
+POST /user/logout
+```
+
+#### Parameters
+* `session_id`, returned at login
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of success/error messages

@@ -6,12 +6,12 @@ POST /user/login
 ```
 
 #### Parameters
-* email
-* password
+* `email`
+* `password`
 
 #### Return
-* status: 0 on success, -1 otherwise
-* message: array of error messages; or session_id() if success
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error messages; or `session_id` on success, please save this `session_id` locally as it will be used for authentication for other method.
 
 */
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {

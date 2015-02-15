@@ -1,7 +1,7 @@
 <?php
 // https://github.com/chriso/klein.php/issues/176
-# $base  = dirname($_SERVER['PHP_SELF']);
-# if (ltrim($base, '/')) $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], strlen($base));
+$base  = dirname($_SERVER['PHP_SELF']);
+if (ltrim($base, '/')) $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], strlen($base));
 // http://stackoverflow.com/questions/1075534/cant-use-method-return-value-in-write-context
 function is_empty($var) {
     return empty($var);
@@ -27,13 +27,18 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     });
     $app->db = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
     if (!is_empty($request->param('session_id'))) {
+        // Take note on [Session Hijacking Attack](https://www.owasp.org/index.php/Session_hijacking_attack)
         session_id($request->param('session_id'));
     }
     session_start();
 });
-foreach(array('register', 'login', 'update') as $controller) {
+foreach(array('register', 'login', 'update', 'logout') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
 }
 $klein->with("/user", "user/user.php");
+
+// foreach(array('new', 'change', 'delete') as $controller) {
+//     $klein->with("/application/$controller", "application/$controller.php");
+// }
 
 $klein->dispatch();

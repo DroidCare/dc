@@ -17,8 +17,8 @@ POST /user/update
 * `session_id`, returned at login
 
 #### Return
-* status: 0 on success, -1 otherwise
-* message: array of error/success messages;
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error/success messages
 
 */
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {
