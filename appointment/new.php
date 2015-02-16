@@ -94,6 +94,12 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty($error_msg)) {
         // Store the image somewhere
         $upload_file = sprintf('%s.%s', sha1_file($attachment['tmp_name']), $ext);
+
+        // If folder does not exists, create it!
+        if (!file_exists($app->upload_dir)) {
+            mkdir($app->upload_dir, 0777, true);
+        }
+
         if (!move_uploaded_file($attachment['tmp_name'], $app->upload_dir . $upload_file)) {
             // error
             $service->flash("Error: failed to move uploaded file.", 'error');
