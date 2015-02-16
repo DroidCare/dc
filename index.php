@@ -10,13 +10,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 $klein = new \Klein\Klein();
 
-$db_host = isset($_SERVER['OPENSHIFT_MYSQL_DB_HOST']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_HOST'] : 'localhost';
-$db_user = isset($_SERVER['OPENSHIFT_MYSQL_DB_USERNAME']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_USERNAME'] : 'root';
-$db_pass = isset($_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD'] : '';
-$db_name = isset($_SERVER['OPENSHIFT_APP_NAME']) ?  $_SERVER['OPENSHIFT_APP_NAME'] : 'droidcare';
-$db_port = isset($_SERVER['OPENSHIFT_MYSQL_DB_PORT']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PORT'] : 3306;
-# var_dump($GLOBALS);
-
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
     $klein->onError(function ($klein, $err_msg) {
@@ -25,20 +18,34 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         // $klein->service()->back();
 
     });
-    $app->db = new mysqli($GLOBALS['db_host'], $GLOBALS['db_user'], $GLOBALS['db_pass'], $GLOBALS['db_name']);
+
+    // Connect to database
+    $db_host = isset($_SERVER['OPENSHIFT_MYSQL_DB_HOST']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_HOST'] : 'localhost';
+    $db_user = isset($_SERVER['OPENSHIFT_MYSQL_DB_USERNAME']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_USERNAME'] : 'root';
+    $db_pass = isset($_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD'] : '';
+    $db_name = isset($_SERVER['OPENSHIFT_APP_NAME']) ?  $_SERVER['OPENSHIFT_APP_NAME'] : 'droidcare';
+    $db_port = isset($_SERVER['OPENSHIFT_MYSQL_DB_PORT']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PORT'] : 3306;
+
+    $app->db = new mysqli($db_host, $db_user, $db_pass, $db_name);
+
+    // Start session
     if (!is_empty($request->param('session_id'))) {
         // Take note on [Session Hijacking Attack](https://www.owasp.org/index.php/Session_hijacking_attack)
         session_id($request->param('session_id'));
     }
     session_start();
+
+    // Attachment folder
+    $app->upload_dir = isset($_SERVER['OPENSHIFT_DATA_DIR']) ?  $_SERVER['OPENSHIFT_DATA_DIR'].'/attachments/' : __DIR__.'/attachments/';
+
 });
 foreach(array('register', 'login', 'update', 'logout') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
 }
 $klein->with("/user", "user/user.php");
 
-// foreach(array('new', 'change', 'delete') as $controller) {
-//     $klein->with("/application/$controller", "application/$controller.php");
-// }
+foreach(array('new'/*, 'edit', 'delete'*/) as $controller) {
+    $klein->with("/appointment/$controller", "appointment/$controller.php");
+}
 
 $klein->dispatch();

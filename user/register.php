@@ -10,7 +10,7 @@ POST /user/register
 * `password`
 * `full_name`
 * `address`
-* `gender`
+* `gender`: 'Male' or 'Female'
 * `passport_number`
 * `nationality`
 * `date_of_birth` (YYYY-MM-DD)
