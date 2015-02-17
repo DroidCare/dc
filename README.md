@@ -128,3 +128,15 @@ POST /appointment/new
 * `status`: `0` on success, `-1` otherwise
 * `message`: array of success/error messages
 
+### Get appointment's attachment
+```
+GET /appointment/attachment/[s:attachment_id]
+```
+
+#### Parameters
+* `attachment_name` from `attachment_paths`
+* `session_id`: returned at login
+
+#### Return
+* `status`: `0` on success, `-1` otherwise
+* `message`: array of error messages; if success, base-64 encoded string of the image file
