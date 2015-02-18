@@ -37,6 +37,8 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     // error checking
     if (is_empty(trim($session_id)))        $service->flash("Please log in to update your details.", 'error');
+    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+                                            $service->flash("Please log in to update your details.", 'error');
     if (is_empty(trim($id)))                $service->flash("Please enter a user id.", 'error');
     if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
     else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');

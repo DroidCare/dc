@@ -44,7 +44,7 @@ foreach(array('register', 'login', 'update', 'logout') as $controller) {
 }
 $klein->with("/user", "user/user.php");
 
-foreach(array('new', 'attachment'/*, 'edit', 'delete'*/) as $controller) {
+foreach(array('new', 'attachment', 'status'/*, 'edit', 'delete'*/) as $controller) {
     $klein->with("/appointment/$controller", "appointment/$controller.php");
 }
 

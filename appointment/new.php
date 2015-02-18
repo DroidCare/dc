@@ -82,8 +82,10 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                                             $service->flash("Please enter the referrer clinic.", 'error');
     if ($type === 'follow-up' && is_empty(trim($previous_id)))
                                             $service->flash("Please enter the previous appointment ID.", 'error');
-    if (is_empty(trim($session_id)))        $service->flash("Please login before creating new appointment.", 'error');
+    if (is_empty(trim($session_id)))        $service->flash("Please log in before creating new appointment.", 'error');
 
+    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+                                        $service->flash("Please log in before creating new appointment.", 'error');
     if (is_empty(trim($date_time)))         $service->flash("Please enter the date and time of appointment.", 'error');
     if (($dob_timestamp = strtotime($date_time)) === false)
                                             $service->flash("Please enter a valid date and time.", 'error');

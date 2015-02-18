@@ -29,6 +29,8 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
 
     // error checking
     if (is_empty(trim($session_id)))    $service->flash("Please log in to view your details.", 'error');
+    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+                                        $service->flash("Please log in to view your details.", 'error');
     if (is_empty(trim($id)))            $service->flash("Please enter a user id.", 'error');
     // "admin" and "consultant" can see user's details
     if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')

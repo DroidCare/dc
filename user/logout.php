@@ -18,7 +18,10 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     $session_id = $mysqli->escape_string($request->param('session_id'));
     if (is_empty(trim($session_id)))
-        $service->flash("Please log in to be able to log out.", 'error');
+        $service->flash("Please log in for you to be able to log out.", 'error');
+    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+        $service->flash("Please log in for you to be able to log out.", 'error');
+    
     $error_msg = $service->flashes('error');
     if (is_empty($error_msg)) {
         // Unset all of the session variables.
