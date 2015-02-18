@@ -47,5 +47,6 @@ $klein->with("/user", "user/user.php");
 foreach(array('new', 'attachment', 'status'/*, 'edit', 'delete'*/) as $controller) {
     $klein->with("/appointment/$controller", "appointment/$controller.php");
 }
+$klein->with("/appointment", "appointment/appointment.php");
 
 $klein->dispatch();

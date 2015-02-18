@@ -139,3 +139,42 @@ GET /appointment/attachment/[s:attachment_id]
 #### Return
 * `status`: `0` on success, `-1` otherwise
 * `message`: array of error messages; if success, base-64 encoded string of the image file
+
+### Update Appointment Status (by Consultant)
+```
+POST appointment/status
+```
+
+#### Parameters
+* `id`: appointment_id
+* `status`: new status ('pending', 'accepted', 'rejected', 'finished')
+* `remarks`
+* `session_id`: returned at login
+
+#### Return
+* `status`: `0` on success, `-1` otherwise
+* `message`: array of success/error messages
+
+### Get Details of Appointment
+```
+POST /appointment/[i:id]
+```
+
+#### Parameters
+* `id` [integer]: appointment id
+* `session_id`
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error messages; or object containing the data:
+  * `patient_id` 
+  * `consultant_id` 
+  * `date_time` 
+  * `health_issue` 
+  * `attachment_paths` 
+  * `type` 
+  * `referrer_name` 
+  * `referrer_clinic` 
+  * `previous_id` 
+  * `remarks`
+  * `status`

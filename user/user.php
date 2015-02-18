@@ -32,7 +32,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
     else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
                                         $service->flash("Please log in to view your details.", 'error');
     if (is_empty(trim($id)))            $service->flash("Please enter a user id.", 'error');
-    // "admin" and "consultant" can see user's details
+    // "admin" and "consultant" can see other user's details
     if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
                                         $service->flash("Sorry, you can't view other patient's details.", 'error');
 
