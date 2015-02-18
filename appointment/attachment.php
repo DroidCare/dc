@@ -7,7 +7,6 @@ GET /appointment/attachment/[s:attachment_id]
 
 #### Parameters
 * `attachment_name` from `attachment_paths`
-* `session_id`: returned at login
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -20,7 +19,6 @@ $this->respond('GET', '/[:attachment_id]', function ($request, $response, $servi
 
     // error checking
     if (is_empty(trim($attachment_id)))     $service->flash("Please enter the attachment id.", 'error');    
-    //if (is_empty(trim($session_id)))        $service->flash("Please login before creating new appointment.", 'error');
 
     $error_msg = $service->flashes('error');
 

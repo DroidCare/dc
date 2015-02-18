@@ -135,7 +135,6 @@ GET /appointment/attachment/[s:attachment_id]
 
 #### Parameters
 * `attachment_name` from `attachment_paths`
-* `session_id`: returned at login
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
