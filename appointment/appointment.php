@@ -7,7 +7,7 @@ POST /appointment/[i:id]
 
 #### Parameters
 * `id` [integer]: appointment id
-* `session_id`
+* `session_id`: returned at login
 
 #### Return
 * `status`: 0 on success, -1 otherwise
@@ -33,14 +33,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
     if (is_empty(trim($session_id)))    $service->flash("Please log in to view the appointment details.", 'error');
     else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
                                         $service->flash("Please log in to view the appointment  details.", 'error');
-    if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');
-    
-    // "admin" can see other user's details
-    // "consultant" can see appointment assigned to him/her
-    // "patient" can see one's appointment
-    if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
-                                        $service->flash("Sorry, you can't view this appointment details.", 'error');
-                                        
+    if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');                               
 
     $error_msg = $service->flashes('error');
 
@@ -61,10 +54,16 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
                 // "admin" can see other user's details
                 // "consultant" can see appointment assigned to him/her
                 // "patient" can see one's appointment
-                if ($_SESSION['user_id'] !== $consultant_id && $_SESSION['user_type'] === 'consultant') {
+                if ($_SESSION['user_id'] !== $patient_id && $_SESSION['user_type'] === 'patient') {
                     $service->flash("Sorry, you can't view this appointment details.", 'error');
                     $return['status'] = -1;
                     $return['message'] = $service->flashes('error');
+
+                } else if ($_SESSION['user_id'] !== $consultant_id && $_SESSION['user_type'] === 'consultant') {
+                    $service->flash("Sorry, you can't view this appointment details.", 'error');
+                    $return['status'] = -1;
+                    $return['message'] = $service->flashes('error');
+
                 } else {
                     $result = array(
                         "patient_id" => $patient_id,

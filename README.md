@@ -162,11 +162,39 @@ POST /appointment/[i:id]
 
 #### Parameters
 * `id` [integer]: appointment id
-* `session_id`
+* `session_id`: returned at login
 
 #### Return
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error messages; or object containing the data:
+  * `patient_id` 
+  * `consultant_id` 
+  * `date_time` 
+  * `health_issue` 
+  * `attachment_paths` 
+  * `type` 
+  * `referrer_name` 
+  * `referrer_clinic` 
+  * `previous_id` 
+  * `remarks`
+  * `status`
+
+### Get Details of Appointment
+```
+POST /appointment/user/[i:id]
+```
+List down appointments:
+* created by user (if user type is 'patient') OR
+* assigned to user (if user type is 'consultant') OR
+* of all users (if user_type is 'admin').
+
+#### Parameters
+* `id` [integer]: user id
+* `session_id`: returned at login
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error messages; or array of objects containing the data:
   * `patient_id` 
   * `consultant_id` 
   * `date_time` 
