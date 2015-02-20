@@ -2,7 +2,7 @@
 ## Description
 For CZ2006 Software Engineering project at Nanyang Technological University (A.Y. 2014-2015 semester 2).
 
-Front-end Android app can be found at [DroidCare](https://github.com/edocsss/DroidCare)
+Front-end Android app can be found at [DroidCare](https://github.com/DroidCare/DroidCare)
 
 ## Dependency
 * [klein.php](https://github.com/chriso/klein.php)
