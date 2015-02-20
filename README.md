@@ -27,14 +27,16 @@ POST /user/register
 ```
 
 #### Parameters
-* `email`
-* `password`
-* `full_name`
-* `address`
-* `gender`
-* `passport_number`
-* `nationality`
-* `date_of_birth` (YYYY-MM-DD)
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `email`           | `string` | User's email, should be a valid email, checked by PHP's [filter_var](http://php.net/manual/en/function.filter-var.php)
+| `password`        | `string` | User's password, 6-32 character long
+| `full_name`       | `string` | User's full name
+| `address`         | `string` | User's address
+| `gender`          | `string` | "`Male`" or "`Female`"
+| `passport_number` | `string` | User's passport number
+| `nationality`     | `string` | User's nationality
+| `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -46,8 +48,10 @@ POST /user/login
 ```
 
 #### Parameters
-* `email`
-* `password`
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `email`           | `string` | User's email, should be a valid email, checked by PHP's [filter_var](http://php.net/manual/en/function.filter-var.php)
+| `password`        | `string` | User's password
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -60,9 +64,10 @@ POST /user/
 ```
 
 #### Parameters
-* `id` [integer]: user id, optional; if not set, user id used is from the session, i.e. current logged in user
-  * **Note**: If `id` is not set, URL must end with "/".
-* `session_id`
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | (Optional) User id. If not set, user id used is from the session, i.e. current logged in user. **Note**: If `id` is not set, URL must end with "`/`".
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -82,15 +87,18 @@ POST /user/update
 ```
 
 #### Parameters
-* `id` [integer]
-* `password`
-* `full_name`
-* `address`
-* `gender`
-* `passport_number`
-* `nationality`
-* `date_of_birth`
-* `session_id`, returned at login
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | User id.
+| `email`           | `string` | User's email, should be a valid email, checked by PHP's [filter_var](http://php.net/manual/en/function.filter-var.php)
+| `password`        | `string` | User's password, 6-32 character long
+| `full_name`       | `string` | User's full name
+| `address`         | `string` | User's address
+| `gender`          | `string` | "`Male`" or "`Female`"
+| `passport_number` | `string` | User's passport number
+| `nationality`     | `string` | User's nationality
+| `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -102,7 +110,9 @@ POST /user/logout
 ```
 
 #### Parameters
-* `session_id`, returned at login
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -114,17 +124,19 @@ POST /appointment/new
 ```
 
 #### Parameters
-* `patient_id`
-* `consultant_id`
-* `date_time` (YYYY-MM-DD HH:mm:SS; Y-M-D H:i:s)
-* `health_issue`
-* `attachment` [file: png, jpg, gif], stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API `/appointment/attachment/[s:attachment_id]`
-* `type`: 'follow-up', 'referral'
-* `referrer_name`: may NULL if `type` is not 'referral'
-* `referrer_clinic`: may NULL if `type` is not 'referral'
-* `previous_id`: may NULL if `type` is not 'follow-up'
-* `remarks`
-* `session_id`: returned at login
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `patient_id`      | `string` |
+| `consultant_id`   | `string` |
+| `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`
+| `health_issue`    | `string` |
+| `attachment`      | `string` | File: png, jpg, gif. stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API `/appointment/attachment/[s:attachment_id]`
+| `type`            | `string` | '`follow-up`', or '`referral`'
+| `referrer_name`   | `string` | may be `NULL` if `type` is not '`referral`'
+| `referrer_clinic` | `string` | may be `NULL` if `type` is not '`referral`'
+| `previous_id`     | `string` | may be `NULL` if `type` is not '`follow-up`'
+| `remarks`         | `string` | (Optional)
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -136,7 +148,9 @@ GET /appointment/attachment/[s:attachment_id]
 ```
 
 #### Parameters
-* `attachment_name` from `attachment_paths`
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `attachment_id`   | `string`  | Appointment's attachment id, returned from `/appointment/[i:id]` or `/appointment/user` at `attachment_paths` field
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -148,10 +162,12 @@ POST appointment/status
 ```
 
 #### Parameters
-* `id`: appointment_id
-* `status`: new status ('pending', 'accepted', 'rejected', 'finished')
-* `remarks`
-* `session_id`: returned at login
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | Appointment id.
+| `status`          | `string`  | '`pending`', '`accepted`', '`rejected`', or '`finished`'
+| `remarks`         | `string`  | (Optional)
+| `session_id`      | `string`  | Session id, returned from `/user/login`
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -163,8 +179,10 @@ POST /appointment/[i:id]
 ```
 
 #### Parameters
-* `id` [integer]: appointment id
-* `session_id`: returned at login
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | Appointment id.
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: 0 on success, -1 otherwise
@@ -192,8 +210,10 @@ List down appointments:
 * of all users (if user_type is 'admin').
 
 #### Parameters
-* `id` [integer]: user id, optional; if not set, user id used is from the session, i.e. current logged in user
-* `session_id`: returned at login
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | (Optional) User id. If not set, user id used is from the session, i.e. current logged in user.
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: 0 on success, -1 otherwise
