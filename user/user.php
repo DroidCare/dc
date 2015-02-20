@@ -6,7 +6,7 @@ POST /user/[i:id]
 ```
 
 #### Parameters
-* `id` [integer]
+* `id` [integer] (optional; if not set, user id used is from the session, i.e. current logged in user)
 * `session_id`
 
 #### Return
@@ -22,18 +22,21 @@ POST /user/[i:id]
   * `type`
 
 */
-$this->respond('POST', '/[i:id]', function ($request, $response, $service, $app) {
+$this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = intval($mysqli->escape_string($request->param('id')));
     $session_id = $mysqli->escape_string($request->param('session_id'));
 
+    if (is_empty(trim($id))) {
+        $id = $_SESSION['user_id'];
+    }
+
     // error checking
     if (is_empty(trim($session_id)))    $service->flash("Please log in to view your details.", 'error');
-    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+    else if (!isset($_SESSION['login'], $_SESSION['user_id'], $_SESSION['user_type']) || $_SESSION['login'] !== TRUE)
                                         $service->flash("Please log in to view your details.", 'error');
-    if (is_empty(trim($id)))            $service->flash("Please enter a user id.", 'error');
     // "admin" and "consultant" can see other user's details
-    if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
+    else if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
                                         $service->flash("Sorry, you can't view other patient's details.", 'error');
 
     $error_msg = $service->flashes('error');

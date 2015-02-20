@@ -56,10 +56,12 @@ POST /user/login
 ### View User Details
 ```
 POST /user/[i:id]
+POST /user/
 ```
 
 #### Parameters
-* `id` [integer]
+* `id` [integer]  (optional; if not set, user id used is from the session, i.e. current logged in user)
+  * **Note**: If `id` is not set, URL must end with "/".
 * `session_id`
 
 #### Return
@@ -182,6 +184,7 @@ POST /appointment/[i:id]
 ### Get Details of Appointment
 ```
 POST /appointment/user/[i:id]
+POST /appointment/user
 ```
 List down appointments:
 * created by user (if user type is 'patient') OR
@@ -189,7 +192,7 @@ List down appointments:
 * of all users (if user_type is 'admin').
 
 #### Parameters
-* `id` [integer]: user id
+* `id` [integer]: user id  (optional; if not set, user id used is from the session, i.e. current logged in user)
 * `session_id`: returned at login
 
 #### Return

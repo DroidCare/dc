@@ -10,7 +10,7 @@ List down appointments:
 * of all users (if user_type is 'admin').
 
 #### Parameters
-* `id` [integer]: user id
+* `id` [integer]: user id (optional; if not set, user id used is from the session, i.e. current logged in user)
 * `session_id`
 
 #### Return
@@ -28,16 +28,18 @@ List down appointments:
   * `remarks`
   * `status`
 */
-$this->respond('POST', '/[i:id]', function ($request, $response, $service, $app) {
+$this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = intval($mysqli->escape_string($request->param('id')));
     $session_id = $mysqli->escape_string($request->param('session_id'));
+    if (is_empty(trim($id))) {
+        $id = $_SESSION['user_id'];
+    }
 
     // error checking
     if (is_empty(trim($session_id)))    $service->flash("Please log in to view the appointment details.", 'error');
     else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
                                         $service->flash("Please log in to view the appointment  details.", 'error');
-    if (is_empty(trim($id)))            $service->flash("Please enter the user id.", 'error');
 
     $error_msg = $service->flashes('error');
 
