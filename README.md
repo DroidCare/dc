@@ -60,7 +60,7 @@ POST /user/
 ```
 
 #### Parameters
-* `id` [integer]  (optional; if not set, user id used is from the session, i.e. current logged in user)
+* `id` [integer]: user id, optional; if not set, user id used is from the session, i.e. current logged in user
   * **Note**: If `id` is not set, URL must end with "/".
 * `session_id`
 
@@ -118,7 +118,7 @@ POST /appointment/new
 * `consultant_id`
 * `date_time` (YYYY-MM-DD HH:mm:SS; Y-M-D H:i:s)
 * `health_issue`
-* `attachment` [file: png, jpg, gif], stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API [todo]
+* `attachment` [file: png, jpg, gif], stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API `/appointment/attachment/[s:attachment_id]`
 * `type`: 'follow-up', 'referral'
 * `referrer_name`: may NULL if `type` is not 'referral'
 * `referrer_clinic`: may NULL if `type` is not 'referral'
@@ -192,7 +192,7 @@ List down appointments:
 * of all users (if user_type is 'admin').
 
 #### Parameters
-* `id` [integer]: user id  (optional; if not set, user id used is from the session, i.e. current logged in user)
+* `id` [integer]: user id, optional; if not set, user id used is from the session, i.e. current logged in user
 * `session_id`: returned at login
 
 #### Return
