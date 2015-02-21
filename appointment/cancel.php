@@ -1,14 +1,12 @@
 <?php
 /*
-### Update Appointment Status (by Consultant)
+### Cancel Appointment (by Patient)
 ```
-POST appointment/status
+POST appointment/cancel
 ```
 
 #### Parameters
 * `id`: appointment_id
-* `status`: new status ('pending', 'accepted', 'rejected', 'finished')
-* `remarks`
 * `session_id`: returned at login
 
 #### Return
@@ -19,13 +17,10 @@ POST appointment/status
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = $mysqli->escape_string($request->param('id'));
-    $status = $mysqli->escape_string($request->param('status'));
-    $remarks = $mysqli->escape_string($request->param('remarks'));
     $session_id = $mysqli->escape_string($request->param('session_id'));
 
     // error checking
     if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');
-    if (is_empty(trim($status)))        $service->flash("Please enter the appointment status.", 'error');
     if (is_empty(trim($session_id)))    $service->flash("Please login before updating the appointment.", 'error');
     else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
                                         $service->flash("Please log in before updating the appointment.", 'error');
@@ -34,14 +29,15 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         // Update database entry
-        $sql_query = "UPDATE `appointment` SET `status` = ?, `remarks` = ? WHERE `id` = ?";
+        $status = 'finished';
+        $sql_query = "UPDATE `appointment` SET `status` = ? WHERE `id` = ?";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("ssi", $status, $remarks, $id);
+            $stmt->bind_param("si", $status, $id);
             $res = $stmt->execute();
             $stmt->close();
             if ($res) {
-                $service->flash("Appointment status successfully updated.", 'success');
+                $service->flash("Appointment cancelled.", 'success');
                 $return['status'] = 0;
                 $return['message'] = $service->flashes('success');
             }

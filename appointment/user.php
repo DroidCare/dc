@@ -1,6 +1,6 @@
 <?php
 /*
-### Get Details of Appointment
+### Get List of Appointments
 ```
 POST /appointment/user/[i:id]
 ```

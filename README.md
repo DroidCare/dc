@@ -199,7 +199,7 @@ POST /appointment/[i:id]
   * `remarks`
   * `status`
 
-### Get Details of Appointment
+### Get List of Appointments
 ```
 POST /appointment/user/[i:id]
 POST /appointment/user
@@ -229,3 +229,18 @@ List down appointments:
   * `previous_id` 
   * `remarks`
   * `status`
+
+### Cancel Appointment (by Patient)
+```
+POST appointment/cancel
+```
+
+#### Parameters
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | Appointment id
+| `session_id`      | `string` | Session id, returned from `/user/login`
+
+#### Return
+* `status`: `0` on success, `-1` otherwise
+* `message`: array of success/error messages
