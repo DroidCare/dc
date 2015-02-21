@@ -12,12 +12,11 @@ $klein = new \Klein\Klein();
 
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     // Handle exceptions => flash the message and redirect to the referrer
-    $klein->onError(function ($klein, $err_msg) {
-        $klein->service()->flash($err_msg, 'error');
-        echo json_encode($klein->service()->flashes());
-        // $klein->service()->back();
-
-    });
+    // $klein->onError(function ($klein, $err_msg) {
+    //     $klein->service()->flash($err_msg, 'error');
+    //     echo json_encode($klein->service()->flashes());
+    //     // $klein->service()->back();
+    // });
 
     // Connect to database
     $db_host = isset($_SERVER['OPENSHIFT_MYSQL_DB_HOST']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_HOST'] : 'localhost';
@@ -35,6 +34,53 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     }
     session_start();
 
+    // Check if authenticated, for certain actions
+    function search_array($search, $array) {
+        foreach($array as $key => $value) {
+            if (!!stristr($search, $value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    if (
+        // Authentication required for these actions:
+        search_array($request->pathname(),
+        array(
+            '/user/update',
+            '/user/logout',
+            '/user',
+            '/appointment/new',
+            '/appointment/status',
+            '/appointment/user',
+            '/appointment/cancel',
+            '/appointment',
+            )
+        , TRUE) && 
+        // No authentication required for these actions:
+        !search_array($request->pathname(),
+        array(
+            '/user/login',
+            '/user/register',
+            '/appointment/attachment',
+            )
+        , TRUE)
+        // Besides these actions, error 404 Not Found or 405 Method Not Allowed are returned (by klein.php)
+        ) {
+        if (is_empty(trim($request->param('session_id')))
+            || !isset($_SESSION['login'])
+            || $_SESSION['login'] !== TRUE) {
+            $service->flash("The action that you're trying to do requires you to log in.", 'error');
+            $error_msg = $service->flashes('error');
+            $return['status'] = -1;
+            $return['message'] = $error_msg;
+            echo json_encode($return);
+            $response->send();
+        }
+    }
+
+        
+    
     // Attachment folder
     $app->upload_dir = isset($_SERVER['OPENSHIFT_DATA_DIR']) ?  $_SERVER['OPENSHIFT_DATA_DIR'].'/attachments/' : __DIR__.'/attachments/';
 

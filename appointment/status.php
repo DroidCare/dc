@@ -21,14 +21,14 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $id = $mysqli->escape_string($request->param('id'));
     $status = $mysqli->escape_string($request->param('status'));
     $remarks = $mysqli->escape_string($request->param('remarks'));
-    $session_id = $mysqli->escape_string($request->param('session_id'));
+    // $session_id = $mysqli->escape_string($request->param('session_id'));
 
     // error checking
     if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');
     if (is_empty(trim($status)))        $service->flash("Please enter the appointment status.", 'error');
-    if (is_empty(trim($session_id)))    $service->flash("Please login before updating the appointment.", 'error');
-    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-                                        $service->flash("Please log in before updating the appointment.", 'error');
+    // if (is_empty(trim($session_id)))    $service->flash("Please login before updating the appointment.", 'error');
+    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+    //                                     $service->flash("Please log in before updating the appointment.", 'error');
 
     $error_msg = $service->flashes('error');
 

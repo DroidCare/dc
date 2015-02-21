@@ -32,14 +32,14 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $mysqli = $app->db;
     $id = intval($mysqli->escape_string($request->param('id')));
     $session_id = $mysqli->escape_string($request->param('session_id'));
-    if (is_empty(trim($id))) {
+    if (is_empty(trim($id)) && isset($_SESSION['user_id'])) {
         $id = $_SESSION['user_id'];
     }
 
     // error checking
-    if (is_empty(trim($session_id)))    $service->flash("Please log in to view the appointment details.", 'error');
-    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-                                        $service->flash("Please log in to view the appointment  details.", 'error');
+    // if (is_empty(trim($session_id)))    $service->flash("Please log in to view the appointment details.", 'error');
+    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+    //                                     $service->flash("Please log in to view the appointment  details.", 'error');
 
     $error_msg = $service->flashes('error');
 

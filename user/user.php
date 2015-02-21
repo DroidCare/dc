@@ -27,14 +27,14 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $id = intval($mysqli->escape_string($request->param('id')));
     $session_id = $mysqli->escape_string($request->param('session_id'));
 
-    if (is_empty(trim($id))) {
+    if (is_empty(trim($id)) && isset($_SESSION['user_id'])) {
         $id = $_SESSION['user_id'];
     }
 
     // error checking
-    if (is_empty(trim($session_id)))    $service->flash("Please log in to view your details.", 'error');
-    else if (!isset($_SESSION['login'], $_SESSION['user_id'], $_SESSION['user_type']) || $_SESSION['login'] !== TRUE)
-                                        $service->flash("Please log in to view your details.", 'error');
+    // if (is_empty(trim($session_id)))    $service->flash("Please log in to view your details.", 'error');
+    // else if (!isset($_SESSION['login'], $_SESSION['user_id'], $_SESSION['user_type']) || $_SESSION['login'] !== TRUE)
+    //                                     $service->flash("Please log in to view your details.", 'error');
     // "admin" and "consultant" can see other user's details
     else if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
                                         $service->flash("Sorry, you can't view other patient's details.", 'error');

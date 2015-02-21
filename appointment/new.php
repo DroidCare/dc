@@ -36,7 +36,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $previous_id = $mysqli->escape_string($request->param('previous_id'));
     $remarks = $mysqli->escape_string($request->param('remarks'));
     $status = 'pending';
-    $session_id = $mysqli->escape_string($request->param('session_id'));
+    // $session_id = $mysqli->escape_string($request->param('session_id'));
     $attachment_path = '';
 
     // error checking
@@ -82,10 +82,10 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                                             $service->flash("Please enter the referrer clinic.", 'error');
     if ($type === 'follow-up' && is_empty(trim($previous_id)))
                                             $service->flash("Please enter the previous appointment ID.", 'error');
-    if (is_empty(trim($session_id)))        $service->flash("Please log in before creating new appointment.", 'error');
+    // if (is_empty(trim($session_id)))        $service->flash("Please log in before creating new appointment.", 'error');
 
-    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-                                        $service->flash("Please log in before creating new appointment.", 'error');
+    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+    //                                     $service->flash("Please log in before creating new appointment.", 'error');
     if (is_empty(trim($date_time)))         $service->flash("Please enter the date and time of appointment.", 'error');
     if (($dob_timestamp = strtotime($date_time)) === false)
                                             $service->flash("Please enter a valid date and time.", 'error');

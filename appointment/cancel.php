@@ -17,13 +17,13 @@ POST appointment/cancel
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = $mysqli->escape_string($request->param('id'));
-    $session_id = $mysqli->escape_string($request->param('session_id'));
+    // $session_id = $mysqli->escape_string($request->param('session_id'));
 
     // error checking
     if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');
-    if (is_empty(trim($session_id)))    $service->flash("Please login before updating the appointment.", 'error');
-    else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-                                        $service->flash("Please log in before updating the appointment.", 'error');
+    // if (is_empty(trim($session_id)))    $service->flash("Please login before updating the appointment.", 'error');
+    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
+    //                                    $service->flash("Please log in before updating the appointment.", 'error');
 
     $error_msg = $service->flashes('error');
 
