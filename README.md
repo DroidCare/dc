@@ -126,10 +126,10 @@ POST /appointment/new
 #### Parameters
 | Name              | Type   | Description
 | ----------------- | ------ | -----------
-| `patient_id`      | `string` |
-| `consultant_id`   | `string` |
+| `patient_id`      | `integer` | User id of type 'patient'
+| `consultant_id`   | `integer` | User id of type 'consultant'
 | `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`
-| `health_issue`    | `string` |
+| `health_issue`    | `string` | Text describing the health issue
 | `attachment`      | `string` | File: png, jpg, gif. stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API `/appointment/attachment/[s:attachment_id]`
 | `type`            | `string` | '`follow-up`', or '`referral`'
 | `referrer_name`   | `string` | may be `NULL` if `type` is not '`referral`'
@@ -244,3 +244,28 @@ POST appointment/cancel
 #### Return
 * `status`: `0` on success, `-1` otherwise
 * `message`: array of success/error messages
+
+### Edit Appointment
+```
+POST /appointment/edit
+```
+
+#### Parameters
+* `id` [integer]: appointment id
+* `patient_id`
+* `consultant_id`
+* `date_time`
+* `health_issue`
+* `session_id`
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | Appointment id
+| `patient_id`      | `integer` | User id of type 'patient'
+| `consultant_id`   | `integer` | User id of type 'consultant'
+| `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`
+| `health_issue`    | `string` | Text describing the health issue
+| `session_id`      | `string` | Session id, returned from `/user/login`
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error/success messages

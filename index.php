@@ -54,6 +54,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
             '/appointment/status',
             '/appointment/user',
             '/appointment/cancel',
+            '/appointment/edit',
             '/appointment',
             )
         , TRUE) && 
@@ -67,7 +68,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         , TRUE)
         // Besides these actions, error 404 Not Found or 405 Method Not Allowed are returned (by klein.php)
         ) {
-        if (is_empty(trim($request->param('session_id')))
+        if (null === $request->param('session_id')
             || !isset($_SESSION['login'])
             || $_SESSION['login'] !== TRUE) {
             $service->flash("The action that you're trying to do requires you to log in.", 'error');
@@ -90,7 +91,7 @@ foreach(array('register', 'login', 'update', 'logout') as $controller) {
 }
 $klein->with("/user", "user/user.php");
 
-foreach(array('new', 'attachment', 'status', 'user', 'cancel'/*, 'edit'*/) as $controller) {
+foreach(array('new', 'attachment', 'status', 'user', 'cancel', 'edit') as $controller) {
     $klein->with("/appointment/$controller", "appointment/$controller.php");
 }
 $klein->with("/appointment", "appointment/appointment.php");

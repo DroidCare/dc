@@ -31,7 +31,7 @@ List down appointments:
 $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = intval($mysqli->escape_string($request->param('id')));
-    $session_id = $mysqli->escape_string($request->param('session_id'));
+    // $session_id = $mysqli->escape_string($request->param('session_id'));
     if (is_empty(trim($id)) && isset($_SESSION['user_id'])) {
         $id = $_SESSION['user_id'];
     }
