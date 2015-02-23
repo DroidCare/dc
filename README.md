@@ -251,12 +251,6 @@ POST /appointment/edit
 ```
 
 #### Parameters
-* `id` [integer]: appointment id
-* `patient_id`
-* `consultant_id`
-* `date_time`
-* `health_issue`
-* `session_id`
 | Name              | Type   | Description
 | ----------------- | ------ | -----------
 | `id`              | `integer` | Appointment id
@@ -269,3 +263,17 @@ POST /appointment/edit
 #### Return
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error/success messages
+
+### Get consultant's unavailable time slot
+```
+GET appointment/timeslot/[i:user_id]
+```
+
+#### Parameters
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `user_id`         | `integer` | User id, should be of 'consultant' type
+
+#### Return
+* `status`: `0` on success, `-1` otherwise
+* `message`: array of error messages; if success, array of date_time representing consultant's **UNAVAILABLE** time slot.

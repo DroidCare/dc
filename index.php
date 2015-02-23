@@ -64,6 +64,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
             '/user/login',
             '/user/register',
             '/appointment/attachment',
+            '/appointment/timeslot',
             )
         , TRUE)
         // Besides these actions, error 404 Not Found or 405 Method Not Allowed are returned (by klein.php)
@@ -91,7 +92,7 @@ foreach(array('register', 'login', 'update', 'logout') as $controller) {
 }
 $klein->with("/user", "user/user.php");
 
-foreach(array('new', 'attachment', 'status', 'user', 'cancel', 'edit') as $controller) {
+foreach(array('new', 'attachment', 'status', 'user', 'cancel', 'edit', 'timeslot') as $controller) {
     $klein->with("/appointment/$controller", "appointment/$controller.php");
 }
 $klein->with("/appointment", "appointment/appointment.php");
