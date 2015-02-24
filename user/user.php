@@ -2,6 +2,7 @@
 /*
 ### View User Details
 ```
+POST /user/
 POST /user/[i:id]
 ```
 
@@ -42,7 +43,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `type` FROM `user` WHERE `id` = ?";
+        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
@@ -55,6 +56,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
                 $stmt->bind_result($full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $type);
                 $stmt->fetch();
                 $result = array(
+                    "id" => $id,
                     "email" => $email,
                     "full_name" => $full_name,
                     "address" => $address,
