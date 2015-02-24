@@ -52,6 +52,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
         } else { // admin can view all
             $sql_query .= "WHERE 1";
         }
+        $sql_query .= " LIMIT 0,1";
         
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;

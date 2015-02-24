@@ -72,6 +72,7 @@ POST /user/
 #### Return
 * `status`: `0` on success, `-1` otherwise
 * `message`: array of error messages; or object containing the data:
+  * `id`: user id
   * `email`
   * `full_name`
   * `address`

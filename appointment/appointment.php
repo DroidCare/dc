@@ -38,7 +38,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` WHERE `id` = ?";
+        $sql_query = "SELECT `patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` WHERE `id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
