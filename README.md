@@ -136,7 +136,6 @@ POST /appointment/new
 | `referrer_name`   | `string` | may be `NULL` if `type` is not '`referral`'
 | `referrer_clinic` | `string` | may be `NULL` if `type` is not '`referral`'
 | `previous_id`     | `string` | may be `NULL` if `type` is not '`follow-up`'
-| `remarks`         | `string` | (Optional)
 | `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return

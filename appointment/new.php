@@ -15,7 +15,6 @@ POST /appointment/new
 * `referrer_name`: may NULL if `type` is not 'referral'
 * `referrer_clinic`: may NULL if `type` is not 'referral'
 * `previous_id`: may NULL if `type` is not 'follow-up'
-* `remarks`
 * `session_id`: returned at login
 
 #### Return
@@ -34,7 +33,6 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $referrer_name = $mysqli->escape_string($request->param('referrer_name'));
     $referrer_clinic = $mysqli->escape_string($request->param('referrer_clinic'));
     $previous_id = $mysqli->escape_string($request->param('previous_id'));
-    $remarks = $mysqli->escape_string($request->param('remarks'));
     $status = 'pending';
     // $session_id = $mysqli->escape_string($request->param('session_id'));
     $attachment_path = '';
@@ -109,12 +107,12 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             $return['message'] = $service->flashes('error');
         } else {
             // Store entry to database
-            $sql_query = "INSERT INTO `appointment`(`patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sql_query = "INSERT INTO `appointment`(`patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $mysqli->prepare($sql_query);
             if ($stmt) {
                 $attachment_paths = $upload_file;
 
-                $stmt->bind_param("iissssssiss", $patient_id, $consultant_id, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
+                $stmt->bind_param("iissssssis", $patient_id, $consultant_id, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $status);
                 $res = $stmt->execute();
                 $stmt->close();
                 if ($res) {
