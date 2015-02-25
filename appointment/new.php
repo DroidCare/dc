@@ -6,7 +6,7 @@ POST /appointment/new
 ```
 
 #### Parameters
-* `patient_id`
+* `patient_id` (Optional; if not set, user id used is from the session, i.e. current logged in user)
 * `consultant_id`
 * `date_time` (YYYY-MM-DD HH:mm:SS; Y-M-D H:i:s)
 * `health_issue`
@@ -36,6 +36,11 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $status = 'pending';
     // $session_id = $mysqli->escape_string($request->param('session_id'));
     $attachment_path = '';
+
+
+    if (is_empty(trim($patient_id)) && isset($_SESSION['user_id'])) {
+        $patient_id = $_SESSION['user_id'];
+    }
 
     // error checking
 

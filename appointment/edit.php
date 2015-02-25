@@ -7,7 +7,7 @@ POST /appointment/edit
 
 #### Parameters
 * `id` [integer]: appointment id
-* `patient_id`
+* `patient_id` (Optional; if not set, user id used is from the session, i.e. current logged in user)
 * `consultant_id`
 * `date_time`
 * `health_issue`
@@ -26,6 +26,10 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $date_time = $mysqli->escape_string($request->param('date_time'));
     $health_issue = $mysqli->escape_string($request->param('health_issue'));
     // $session_id = $mysqli->escape_string($request->param('session_id'));
+
+    if (is_empty(trim($patient_id)) && isset($_SESSION['user_id'])) {
+        $patient_id = $_SESSION['user_id'];
+    }
 
     // error checking
     if (is_empty(trim($id)))                $service->flash("Please enter the appointment id.", 'error');
