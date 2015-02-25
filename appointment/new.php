@@ -83,7 +83,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                                             $service->flash("Please enter the referrer name.", 'error');
     if ($type === 'referral' && is_empty(trim($referrer_clinic)))
                                             $service->flash("Please enter the referrer clinic.", 'error');
-    if ($type === 'follow-up' && is_empty(trim($previous_id)))
+    if ($type === 'follow-up' && is_empty($previous_id))
                                             $service->flash("Please enter the previous appointment ID.", 'error');
     // if (is_empty(trim($session_id)))        $service->flash("Please log in before creating new appointment.", 'error');
 
@@ -97,15 +97,18 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        // Store the image somewhere
-        $upload_file = sprintf('%s.%s', sha1_file($attachment['tmp_name']), $ext);
+        if ($type === 'follow-up') {
+            // Store the image somewhere
+            $upload_file = sprintf('%s.%s', sha1_file($attachment['tmp_name']), $ext);
 
-        // If folder does not exists, create it!
-        if (!file_exists($app->upload_dir)) {
-            mkdir($app->upload_dir, 0777, true);
+            // If folder does not exists, create it!
+            if (!file_exists($app->upload_dir)) {
+                mkdir($app->upload_dir, 0777, true);
+            }
+        } else {
+            $upload_file = "";
         }
-
-        if (!move_uploaded_file($attachment['tmp_name'], $app->upload_dir . $upload_file)) {
+        if ($type === 'follow-up' && !move_uploaded_file($attachment['tmp_name'], $app->upload_dir . $upload_file)) {
             // error
             $service->flash("Error: failed to move uploaded file.", 'error');
             $return['status'] = -1;
