@@ -65,6 +65,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
             '/user/register',
             '/appointment/attachment',
             '/appointment/timeslot',
+            '/user/consultant',
             )
         , TRUE)
         // Besides these actions, error 404 Not Found or 405 Method Not Allowed are returned (by klein.php)
@@ -87,7 +88,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     $app->upload_dir = isset($_SERVER['OPENSHIFT_DATA_DIR']) ?  $_SERVER['OPENSHIFT_DATA_DIR'].'/attachments/' : __DIR__.'/attachments/';
 
 });
-foreach(array('register', 'login', 'update', 'logout') as $controller) {
+foreach(array('register', 'login', 'update', 'logout', 'consultant') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
 }
 $klein->with("/user", "user/user.php");

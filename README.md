@@ -277,3 +277,17 @@ GET appointment/timeslot/[i:user_id]
 #### Return
 * `status`: `0` on success, `-1` otherwise
 * `message`: array of error messages; if success, array of date_time representing consultant's **UNAVAILABLE** time slot.
+
+### Get list of consultant
+```
+GET /user/consultant
+```
+
+#### Parameters
+none
+
+#### Return
+* `status`: `0` on success, `-1` otherwise
+* `message`: array of error messages; or array of objects containing the data:
+  * `id`: user id of consultant
+  * `full_name`
