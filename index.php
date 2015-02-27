@@ -27,13 +27,6 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
 
     $app->db = new mysqli($db_host, $db_user, $db_pass, $db_name);
 
-    // Start session
-    if (!is_empty($request->param('session_id'))) {
-        // Take note on [Session Hijacking Attack](https://www.owasp.org/index.php/Session_hijacking_attack)
-        session_id($request->param('session_id'));
-    }
-    session_start();
-
     // Check if authenticated, for certain actions
     function search_array($search, $array) {
         foreach($array as $key => $value) {
@@ -70,15 +63,26 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         , TRUE)
         // Besides these actions, error 404 Not Found or 405 Method Not Allowed are returned (by klein.php)
         ) {
+
+        function session_is_registered($x) {return isset($_SESSION[$x]);}
+        // Start session; only start session when required.
+        if (!is_empty($request->param('session_id'))) {
+            // Take note on [Session Hijacking Attack](https://www.owasp.org/index.php/Session_hijacking_attack)
+            session_id($request->param('session_id'));
+        }
+        session_start();
+
+
         if (null === $request->param('session_id')
             || !isset($_SESSION['login'])
             || $_SESSION['login'] !== TRUE) {
+            session_regenerate_id();
             $service->flash("The action that you're trying to do requires you to log in.", 'error');
             $error_msg = $service->flashes('error');
             $return['status'] = -1;
             $return['message'] = $error_msg;
             echo json_encode($return);
-            $response->send();
+            $response->send(); die();
         }
     }
 
