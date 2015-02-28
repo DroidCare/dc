@@ -15,7 +15,7 @@ GET appointment/timeslot/[i:user_id]
 */
 $this->respond('GET', '/[i:user_id]', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
-    $user_id = $mysqli->escape_string($request->param('user_id'));
+    $user_id = intval($mysqli->escape_string($request->param('user_id')));
     // error checking
     if (is_empty(trim($user_id)))     $service->flash("Please enter the user id.", 'error');    
 

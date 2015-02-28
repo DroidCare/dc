@@ -21,14 +21,13 @@ POST /appointment/edit
 $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = intval($mysqli->escape_string($request->param('id')));
-    $patient_id = $mysqli->escape_string($request->param('patient_id'));
-    $consultant_id = $mysqli->escape_string($request->param('consultant_id'));
+    $patient_id = intval($mysqli->escape_string($request->param('patient_id')));
+    $consultant_id = intval($mysqli->escape_string($request->param('consultant_id')));
     $date_time = $mysqli->escape_string($request->param('date_time'));
     $health_issue = $mysqli->escape_string($request->param('health_issue'));
-    // $session_id = $mysqli->escape_string($request->param('session_id'));
 
     if (is_empty(trim($patient_id)) && isset($_SESSION['user_id'])) {
-        $patient_id = $_SESSION['user_id'];
+        $patient_id = intval($_SESSION['user_id']);
     }
 
     // error checking
@@ -36,9 +35,6 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     if (is_empty(trim($patient_id)))        $service->flash("Please enter the patient id.", 'error');
     if (is_empty(trim($consultant_id)))     $service->flash("Please enter the consultant id.", 'error');
     if (is_empty(trim($health_issue)))      $service->flash("Please enter the health issue.", 'error');
-    // if (is_empty(trim($session_id)))    $service->flash("Please log in to view the appointment details.", 'error');
-    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-    //                                     $service->flash("Please log in to view the appointment  details.", 'error');
     if (is_empty(trim($date_time)))         $service->flash("Please enter the date and time of appointment.", 'error');
     if (($dob_timestamp = strtotime($date_time)) === false)
                                             $service->flash("Please enter a valid date and time.", 'error');

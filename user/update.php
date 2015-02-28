@@ -26,26 +26,18 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $id = intval($mysqli->escape_string($request->param('id')));
     $password = $mysqli->escape_string($request->param('password'));
     $full_name = $mysqli->escape_string($request->param('full_name'));
-    // $email = $mysqli->escape_string($request->param('email'));
     $address = $mysqli->escape_string($request->param('address'));
     $gender = $mysqli->escape_string($request->param('gender'));
     $passport_number = $mysqli->escape_string($request->param('passport_number'));
     $nationality = $mysqli->escape_string($request->param('nationality'));
     $date_of_birth = $mysqli->escape_string($request->param('date_of_birth'));
     $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
-    // $session_id = $mysqli->escape_string($request->param('session_id'));
 
     // error checking
-    // if (is_empty(trim($session_id)))        $service->flash("Please log in to update your details.", 'error');
-    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-    //                                         $service->flash("Please log in to update your details.", 'error');
     if (is_empty(trim($id)))                $service->flash("Please enter a user id.", 'error');
     if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
     else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');
     if (is_empty(trim($full_name)))         $service->flash("Please enter your full name.", 'error');
-    // if (is_empty(trim($email)))             $service->flash("Please enter your e-mail address.", 'error');
-    // if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-    //                                         $service->flash("Please enter a valid e-mail address.", 'error');
     if (is_empty(trim($address)))           $service->flash("Please enter your address.", 'error');
     if (is_empty(trim($gender)))            $service->flash("Please specify your gender.", 'error');
     if (is_empty(trim($passport_number)))   $service->flash("Please enter your passport number.", 'error');

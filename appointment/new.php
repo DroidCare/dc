@@ -24,17 +24,16 @@ POST /appointment/new
 */
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
-    $patient_id = $mysqli->escape_string($request->param('patient_id'));
-    $consultant_id = $mysqli->escape_string($request->param('consultant_id'));
+    $patient_id = intval($mysqli->escape_string($request->param('patient_id')));
+    $consultant_id = intval($mysqli->escape_string($request->param('consultant_id')));
     $date_time = $mysqli->escape_string($request->param('date_time'));
     $health_issue = $mysqli->escape_string($request->param('health_issue'));
     $attachment = $request->files()['attachment'];
     $type = $mysqli->escape_string($request->param('type'));
     $referrer_name = $mysqli->escape_string($request->param('referrer_name'));
     $referrer_clinic = $mysqli->escape_string($request->param('referrer_clinic'));
-    $previous_id = $mysqli->escape_string($request->param('previous_id'));
+    $previous_id = intval($mysqli->escape_string($request->param('previous_id')));
     $status = 'pending';
-    // $session_id = $mysqli->escape_string($request->param('session_id'));
     $attachment_path = '';
 
 
@@ -85,10 +84,6 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                                             $service->flash("Please enter the referrer clinic.", 'error');
     if ($type === 'follow-up' && is_empty($previous_id))
                                             $service->flash("Please enter the previous appointment ID.", 'error');
-    // if (is_empty(trim($session_id)))        $service->flash("Please log in before creating new appointment.", 'error');
-
-    // else if (!isset($_SESSION['login']) || $_SESSION['login'] !== TRUE)
-    //                                     $service->flash("Please log in before creating new appointment.", 'error');
     if (is_empty(trim($date_time)))         $service->flash("Please enter the date and time of appointment.", 'error');
     if (($dob_timestamp = strtotime($date_time)) === false)
                                             $service->flash("Please enter a valid date and time.", 'error');

@@ -46,9 +46,12 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             $_SESSION['login'] = TRUE;
             $_SESSION['user_id'] = $user_id;
             $_SESSION['user_type'] = $user_type;
+
             $service->flash(session_id(), 'success');
+
             $return['status'] = 0;
             $return['message'] = $service->flashes('success');
+
         } else {
             $service->flash("Wrong e-mail address or password.", 'error');
             $return['status'] = -1;

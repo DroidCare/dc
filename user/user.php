@@ -34,9 +34,6 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     }
 
     // error checking
-    // if (is_empty(trim($session_id)))    $service->flash("Please log in to view your details.", 'error');
-    // else if (!isset($_SESSION['login'], $_SESSION['user_id'], $_SESSION['user_type']) || $_SESSION['login'] !== TRUE)
-    //                                     $service->flash("Please log in to view your details.", 'error');
     // "admin" and "consultant" can see other user's details
     else if ($_SESSION['user_id'] !== $id && $_SESSION['user_type'] === 'patient')
                                         $service->flash("Sorry, you can't view other patient's details.", 'error');
