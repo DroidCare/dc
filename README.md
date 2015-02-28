@@ -14,7 +14,7 @@ All return values are in JSON string format, with two keys:
 
 ### Request URL
 ```
-https://dc.kenrick95.org/
+http://dc.kenrick95.org/
 ```
 or
 ```
