@@ -16,6 +16,7 @@ List down appointments:
 #### Return
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error messages; or array of objects containing the data:
+  * `id`: appointment id
   * `patient_id` 
   * `consultant_id` 
   * `date_time` 
@@ -42,7 +43,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` ";
+        $sql_query = "SELECT `id`, `patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` ";
         if ($_SESSION['user_type'] === 'patient') {
             $sql_query .= "WHERE `patient_id` = ?";
         } else if ($_SESSION['user_type'] === 'consultant') {
@@ -62,11 +63,12 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($patient_id, $consultant_id, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
+                $stmt->bind_result($appointment_id, $patient_id, $consultant_id, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
                 $result = [];
                 while ($stmt->fetch()) {
                     array_push($result,
                         array(
+                            "id" => $appointment_id,
                             "patient_id" => $patient_id,
                             "consultant_id" => $consultant_id,
                             "date_time" => $date_time,

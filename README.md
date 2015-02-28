@@ -218,6 +218,7 @@ List down appointments:
 #### Return
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error messages; or array of objects containing the data:
+  * `id`: appointment id
   * `patient_id` 
   * `consultant_id` 
   * `date_time` 
