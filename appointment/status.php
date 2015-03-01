@@ -6,7 +6,7 @@ POST appointment/status
 ```
 
 #### Parameters
-* `id`: appointment_id
+* `id` [integer]: appointment_id
 * `status`: new status ('pending', 'accepted', 'rejected', 'finished')
 * `remarks`
 * `session_id`: returned at login

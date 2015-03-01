@@ -7,8 +7,8 @@ POST /appointment/edit
 
 #### Parameters
 * `id` [integer]: appointment id
-* `patient_id` (Optional; if not set, user id used is from the session, i.e. current logged in user)
-* `consultant_id`
+* `patient_id` [integer] (Optional; if not set, user id used is from the session, i.e. current logged in user)
+* `consultant_id` [integer]
 * `date_time`
 * `health_issue`
 * `session_id`

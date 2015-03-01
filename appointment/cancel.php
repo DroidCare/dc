@@ -6,7 +6,7 @@ POST appointment/cancel
 ```
 
 #### Parameters
-* `id`: appointment_id
+* `id` [integer]: appointment_id
 * `session_id`: returned at login
 
 #### Return

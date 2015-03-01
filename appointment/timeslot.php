@@ -6,7 +6,7 @@ GET appointment/timeslot/[i:user_id]
 ```
 
 #### Parameters
-* `user_id`: user id, should be of 'consultant' type
+* `user_id` [integer]: user id, should be of 'consultant' type
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -33,10 +33,11 @@ $this->respond('GET', '/[i:user_id]', function ($request, $response, $service, $
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($date_time);
                 $result = [];
+                $stmt->bind_result($date_time);
+
                 while ($stmt->fetch()) {
-                    array_push($result,$date_time);
+                    array_push($result, $date_time);
                 }
                 $return['status'] = 0;
                 $return['message'] = $result;

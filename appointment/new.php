@@ -6,15 +6,15 @@ POST /appointment/new
 ```
 
 #### Parameters
-* `patient_id` (Optional; if not set, user id used is from the session, i.e. current logged in user)
-* `consultant_id`
-* `date_time` (YYYY-MM-DD HH:mm:SS; Y-M-D H:i:s)
+* `patient_id` [integer] (Optional; if not set, user id used is from the session, i.e. current logged in user)
+* `consultant_id` [integer]
+* `date_time` (YYYY-MM-DD HH:mm:SS; Y-M-D H:i:s; should be multiple of 30 minutes)
 * `health_issue`
 * `attachment` [file: png, jpg, gif], stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API [todo]
 * `type`: 'follow-up', 'referral'
 * `referrer_name`: may NULL if `type` is not 'referral'
 * `referrer_clinic`: may NULL if `type` is not 'referral'
-* `previous_id`: may NULL if `type` is not 'follow-up'
+* `previous_id` [integer]: may NULL if `type` is not 'follow-up'
 * `session_id`: returned at login
 
 #### Return

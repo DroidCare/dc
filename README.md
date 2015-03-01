@@ -129,13 +129,13 @@ POST /appointment/new
 | ----------------- | ------ | -----------
 | `patient_id`      | `integer` | (Optional) User id of type 'patient'. If not set, user id used is from the session, i.e. current logged in user. 
 | `consultant_id`   | `integer` | User id of type 'consultant'
-| `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`
+| `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`; should be multiple of 30 minutes
 | `health_issue`    | `string` | Text describing the health issue
 | `attachment`      | `string` | File: png, jpg, gif. stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API `/appointment/attachment/[s:attachment_id]`
 | `typ(Optional) User id. If not set, user id used is from the session, i.e. current logged in user.e`            | `string` | '`follow-up`', or '`referral`'
 | `referrer_name`   | `string` | may be `NULL` if `type` is not '`referral`'
 | `referrer_clinic` | `string` | may be `NULL` if `type` is not '`referral`'
-| `previous_id`     | `string` | may be `NULL` if `type` is not '`follow-up`'
+| `previous_id`     | `integer` | may be `NULL` if `type` is not '`follow-up`'
 | `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
