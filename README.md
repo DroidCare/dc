@@ -292,3 +292,15 @@ none
 * `message`: array of error messages; or array of objects containing the data:
   * `id`: user id of consultant
   * `full_name`
+
+### Forget password
+```
+POST /user/forget
+```
+
+#### Parameters
+* `email`
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error/success messages
