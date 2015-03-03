@@ -67,20 +67,26 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
         ";
 
         // To send HTML mail, the Content-type header must be set
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $headers  = 'MIME-Version: 1.0' . "\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\n";
 
         // Additional headers
-        $headers .= 'To: ' . $email . "\r\n";
-        $headers .= 'From: DroidCare <noreply@kenrick95.org>' . "\r\n";
+        $headers .= 'To: ' . $email . "\n";
+        $headers .= 'From: DroidCare <noreply@kenrick95.org>' . "\n";
 
         // Mail it
-        mail($to, $subject, $message, $headers);
+        $mail = mail($to, $subject, $message, $headers);
         
-        $service->flash('Reset password e-mail sent', 'success');
+        if ($mail) {
+            $service->flash('Reset password e-mail sent', 'success');
 
-        $return['status'] = 0;
-        $return['message'] = $service->flashes('success');
+            $return['status'] = 0;
+            $return['message'] = $service->flashes('success');
+        } else {
+            $service->flash("Fail to send e-mail.", 'error');
+            $return['status'] = -1;
+            $return['message'] = $service->flashes('error');
+        }
 
     } else {
         $return['status'] = -1;
