@@ -278,19 +278,18 @@ POST /appointment/edit
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error/success messages
 
-### Get consultant's unavailable time slot
+### Get consultant's available time slot
 ```
-GET appointment/timeslot/[i:user_id]
+GET appointment/timeslot/[i:user_id]/[s:date]
 ```
 
 #### Parameters
-| Name              | Type   | Description
-| ----------------- | ------ | -----------
-| `user_id`         | `integer` | User id, should be of 'consultant' type
+* `user_id` [integer]: user id, should be of 'consultant' 
+* `date` [string]: in YYYY-MM-DD format (Y-m-d)
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
-* `message`: array of error messages; if success, array of date_time representing consultant's **UNAVAILABLE** time slot.
+* `message`: array of error messages; if success, array of date_time representing **time start** of consultant's **AVAILABLE** time slot.
 
 ### Get list of consultant
 ```
