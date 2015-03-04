@@ -2,30 +2,55 @@
 // https://github.com/chriso/klein.php/issues/176
 $base  = dirname($_SERVER['PHP_SELF']);
 if (ltrim($base, '/')) $_SERVER['REQUEST_URI'] = substr($_SERVER['REQUEST_URI'], strlen($base));
+
 // http://stackoverflow.com/questions/1075534/cant-use-method-return-value-in-write-context
 function is_empty($var) {
     return empty($var);
 }
+
+// Include composer
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/config.php';
 
 $klein = new \Klein\Klein();
 
 $klein->respond(function ($request, $response, $service, $app) use ($klein) {
-    // Handle exceptions => flash the message and redirect to the referrer
-    // $klein->onError(function ($klein, $err_msg) {
-    //     $klein->service()->flash($err_msg, 'error');
-    //     echo json_encode($klein->service()->flashes());
-    //     // $klein->service()->back();
-    // });
+    $app->register('db', function() {
+        // Connect to database
+        global $db_host;
+        global $db_user;
+        global $db_pass;
+        global $db_name;
+        return new mysqli($db_host, $db_user, $db_pass, $db_name);
+    });
 
-    // Connect to database
-    $db_host = isset($_SERVER['OPENSHIFT_MYSQL_DB_HOST']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_HOST'] : 'localhost';
-    $db_user = isset($_SERVER['OPENSHIFT_MYSQL_DB_USERNAME']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_USERNAME'] : 'root';
-    $db_pass = isset($_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PASSWORD'] : '';
-    $db_name = isset($_SERVER['OPENSHIFT_APP_NAME']) ?  $_SERVER['OPENSHIFT_APP_NAME'] : 'dc';
-    $db_port = isset($_SERVER['OPENSHIFT_MYSQL_DB_PORT']) ?  $_SERVER['OPENSHIFT_MYSQL_DB_PORT'] : 3306;
+    // Mail helper
+    $app->register('mail', function () {
+        $mail = new PHPMailer;
+        global $smtp_host;
+        global $smtp_auth;
+        global $smtp_username;
+        global $smtp_password ;
+        global $smtp_secure;
+        global $smtp_port;
+        global $smtp_from;
+        global $smtp_from_name;
 
-    $app->db = new mysqli($db_host, $db_user, $db_pass, $db_name);
+        $mail->isSMTP(); // Set mailer to use SMTP
+        $mail->Host = $smtp_host;
+        $mail->SMTPAuth = $smtp_auth;
+        $mail->Username = $smtp_username;
+        $mail->Password = $smtp_password;
+        $mail->SMTPSecure = $smtp_secure; 
+        $mail->Port = $smtp_port;
+        $mail->From = $smtp_from;
+        $mail->FromName = $smtp_from_name;
+        $mail->addReplyTo($smtp_from, $smtp_from_name);
+
+        $mail->isHTML(true); // Set email format to HTML
+
+        return $mail;
+    });
 
     // Check if authenticated, for certain actions
     function search_array($search, $array) {
