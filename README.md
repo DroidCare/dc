@@ -195,8 +195,10 @@ POST /appointment/[i:id]
 #### Return
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error messages; or object containing the data:
-  * `patient_id` 
-  * `consultant_id` 
+  * `patient_id`
+  * `patient_name`
+  * `consultant_id`
+  * `consultant_name`
   * `date_time` 
   * `health_issue` 
   * `attachment_paths` 
@@ -227,13 +229,15 @@ List down appointments:
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error messages; or array of objects containing the data:
   * `id`: appointment id
-  * `patient_id` 
-  * `consultant_id` 
-  * `date_time` 
-  * `health_issue` 
-  * `attachment_paths` 
-  * `type` 
-  * `referrer_name` 
+  * `patient_id`
+  * `patient_name`
+  * `consultant_id`
+  * `consultant_name`
+  * `date_time`
+  * `health_issue`
+  * `attachment_paths`
+  * `type`
+  * `referrer_name`
   * `referrer_clinic` 
   * `previous_id` 
   * `remarks`
