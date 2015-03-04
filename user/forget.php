@@ -39,18 +39,15 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             $stmt->close();
         }
         // Generate temporary password
-        $password = substr(crypt(date("Y-m-d H:i:s") . $email, $user_id), 0, 10);
-        $hash = crypt($password, $user_id);
-        $url = "http://dc.kenrick95.org/user/reset/$user_id/$hash"; //haven't been implemented yet
+        $password = substr(hash('whirlpool', date("Y-m-d H:i:s") . $email . $user_id . $email), rand(0, 10), 10);
+        $salt     = substr(hash('whirlpool', date("Y-m-d H:i:s")), rand(0, 10), 30);
+        $hash = crypt($password, $salt);
+        $url = "http://dc.kenrick95.org/user/reset/$salt/$hash"; //haven't been implemented yet
 
         // Send e-mail
-        $to  = $email;
-
-        // subject
+        $recipient  = $email;
         $subject = '[DroidCare] Password Reset Request';
-
-        // message
-        $message = "
+        $body = "
         <html>
         <head>
           <title>[DroidCare] Password Reset Request</title>
@@ -60,30 +57,34 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
           <p>We have received a request for password reset. If you think you have done this request, please click the link below.</p>
           <p><a href=\"$url\">$url</a></p>
           <p>If you have not requested a password reset, kindly ignore this e-mail.</p>
+          <br><br>
           <p>Sincerely,</p>
           <p>DroidCare team</p>
         </body>
         </html>
         ";
+        $altBody = "Dear valued customer\r\n
+          We have received a request for password reset. If you think you have done this request, please click the link below.\r\n
+          $url\r\n
+          If you have not requested a password reset, kindly ignore this e-mail.\r\n
+          Sincerely,\r\n
+          DroidCare team";
 
-        // To send HTML mail, the Content-type header must be set
-        $headers  = 'MIME-Version: 1.0' . "\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\n";
+        // Send e-mail via PHPMailer
+        $mail = $app->mail;
+        $mail->addAddress($recipient);     // Add a recipient
 
-        // Additional headers
-        $headers .= 'To: ' . $email . "\n";
-        $headers .= 'From: DroidCare <noreply@kenrick95.org>' . "\n";
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+        $mail->AltBody = $altBody;
 
-        // Mail it
-        $mail = mail($to, $subject, $message, $headers);
-        
-        if ($mail) {
+        if ($mail->send()) {
             $service->flash('Reset password e-mail sent', 'success');
 
             $return['status'] = 0;
             $return['message'] = $service->flashes('success');
         } else {
-            $service->flash("Fail to send e-mail.", 'error');
+            $service->flash("Fail to send e-mail." . $mail->ErrorInfo, 'error');
             $return['status'] = -1;
             $return['message'] = $service->flashes('error');
         }
