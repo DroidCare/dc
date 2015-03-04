@@ -4,8 +4,16 @@ For CZ2006 Software Engineering project at Nanyang Technological University (A.Y
 
 Front-end Android app can be found at [DroidCare](https://github.com/DroidCare/DroidCare)
 
-## Dependency
+## Dependency (via Composer)
 * [klein.php](https://github.com/chriso/klein.php)
+* [PHPMailer](https://github.com/PHPMailer/PHPMailer)
+
+## Installation
+1. Clone (download) this project
+2. Install [Composer](http://getcomposer.com) on the project's folder
+2. On the project's folder, run `php composer.phar update`
+3. Set-up database **Details will be updated later**
+4. ??
 
 ## REST API Documentation
 All return values are in JSON string format, with two keys:
