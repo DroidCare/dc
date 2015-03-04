@@ -9,11 +9,12 @@ Front-end Android app can be found at [DroidCare](https://github.com/DroidCare/D
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer)
 
 ## Installation
+0. Assumptions: PHP, Apache, MySQL have been set up.
 1. Clone (download) this project
-2. Install [Composer](http://getcomposer.com) on the project's folder
 2. On the project's folder, run `php composer.phar update`
-3. Set-up database **Details will be updated later**
-4. ??
+3. Set-up database: run the SQL provided `dc.sql` OR import `dc.sql` to phpmyadmin.
+4. Done: access via REST API to `http://localhost/[PATH_TO_YOUR_PROJECT]/`
+  - Example: Login via `POST http://localhost/[PATH_TO_YOUR_PROJECT]/user/login`
 
 ## REST API Documentation
 All return values are in JSON string format, with two keys:
