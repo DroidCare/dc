@@ -316,3 +316,16 @@ POST /user/forget
 #### Return
 * `status`: 0 on success, -1 otherwise
 * `message`: array of error/success messages
+
+### Reset password
+```
+GET /user/reset/[s:password_token]
+```
+Users are expected to access this URL from e-mail sent by `/user/forget`
+
+#### Parameters
+* `password_token`: Generated from `/user/forget`
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error/success messages

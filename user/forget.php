@@ -38,56 +38,76 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
             $stmt->close();
         }
-        // Generate temporary password
-        $password = substr(hash('whirlpool', date("Y-m-d H:i:s") . $email . $user_id . $email), rand(0, 10), 10);
-        $salt     = substr(hash('whirlpool', date("Y-m-d H:i:s")), rand(0, 10), 30);
-        $hash = crypt($password, $salt);
-        $url = "http://dc.kenrick95.org/user/reset/$salt/$hash"; //haven't been implemented yet
-
-        // Send e-mail
-        $recipient  = $email;
-        $subject = '[DroidCare] Password Reset Request';
-        $body = "
-        <html>
-        <head>
-          <title>[DroidCare] Password Reset Request</title>
-        </head>
-        <body>
-          <p>Dear valued customer,</p>
-          <p>We have received a request for password reset. If you think you have done this request, please click the link below.</p>
-          <p><a href=\"$url\">$url</a></p>
-          <p>If you have not requested a password reset, kindly ignore this e-mail.</p>
-          <br><br>
-          <p>Sincerely,</p>
-          <p>DroidCare team</p>
-        </body>
-        </html>
-        ";
-        $altBody = "Dear valued customer\r\n
-          We have received a request for password reset. If you think you have done this request, please click the link below.\r\n
-          $url\r\n
-          If you have not requested a password reset, kindly ignore this e-mail.\r\n
-          Sincerely,\r\n
-          DroidCare team";
-
-        // Send e-mail via PHPMailer
-        $mail = $app->mail;
-        $mail->addAddress($recipient);     // Add a recipient
-
-        $mail->Subject = $subject;
-        $mail->Body    = $body;
-        $mail->AltBody = $altBody;
-
-        if ($mail->send()) {
-            $service->flash('Reset password e-mail sent', 'success');
-
-            $return['status'] = 0;
-            $return['message'] = $service->flashes('success');
-        } else {
-            $service->flash("Fail to send e-mail." . $mail->ErrorInfo, 'error');
+        if ($num_rows == 0) {
+            $service->flash("User does not exist", 'error');
             $return['status'] = -1;
             $return['message'] = $service->flashes('error');
+        } else {
+            // Generate password token
+            $token_expiry = date("Y-m-d H:i:s", mktime(date("H"), date("i"), date("s"), date("n"), date("j")+1, date("Y")));
+            $password_token = substr(hash('whirlpool', $token_expiry . $email . $user_id . $email), rand(0, 10), 30);
+            $url = "http://dc.kenrick95.org/user/reset/$password_token"; //haven't been implemented yet
+            // Store it at database
+            $sql_query = "UPDATE `user` SET `password_token` = ?, `token_expiry` = ? WHERE `id` = ?";
+            $stmt = $mysqli->prepare($sql_query);
+            if ($stmt) {
+                $stmt->bind_param("ssi", $password_token, $token_expiry, $user_id);
+                $res = $stmt->execute();
+                $stmt->store_result();
+                $stmt->close();
+            } else {
+                die($mysqli->error);
+            }
+            
+
+            // Send e-mail
+            $recipient  = $email;
+            $subject = '[DroidCare] Password Reset Request';
+            $body = "
+            <html>
+            <head>
+              <title>[DroidCare] Password Reset Request</title>
+            </head>
+            <body>
+              <p>Dear valued customer,</p>
+              <p>We have received a request for password reset. If you think you have done this request, please click the link below.</p>
+              <p><a href=\"$url\">$url</a></p>
+              <p>This link will be active for the next 24 hours</p>
+              <p>If you have not requested a password reset, kindly ignore this e-mail.</p>
+              <br><br>
+              <p>Sincerely,</p>
+              <p>DroidCare team</p>
+            </body>
+            </html>
+            ";
+            $altBody = "Dear valued customer\r\n
+              We have received a request for password reset. If you think you have done this request, please click the link below.\r\n
+              $url\r\n
+              If you have not requested a password reset, kindly ignore this e-mail.\r\n
+              Sincerely,\r\n
+              DroidCare team";
+
+            // Send e-mail via PHPMailer
+            $mail = $app->mail;
+            $mail->addAddress($recipient);     // Add a recipient
+
+            $mail->Subject = $subject;
+            $mail->Body    = $body;
+            $mail->AltBody = $altBody;
+
+            if ($mail->send()) {
+                $service->flash('Reset password e-mail sent', 'success');
+
+                $return['status'] = 0;
+                $return['message'] = $service->flashes('success');
+            } else {
+                $service->flash("Fail to send e-mail." . $mail->ErrorInfo, 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
+            }
         }
+        
+        
 
     } else {
         $return['status'] = -1;

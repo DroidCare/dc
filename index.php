@@ -82,6 +82,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
             '/user/login',
             '/user/register',
             '/user/forget',
+            '/user/reset',
             '/appointment/attachment',
             '/appointment/timeslot',
             '/user/consultant',
@@ -118,7 +119,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
     $app->upload_dir = isset($_SERVER['OPENSHIFT_DATA_DIR']) ?  $_SERVER['OPENSHIFT_DATA_DIR'].'/attachments/' : __DIR__.'/attachments/';
 
 });
-foreach(array('register', 'login', 'update', 'logout', 'consultant', 'forget') as $controller) {
+foreach(array('register', 'login', 'update', 'logout', 'consultant', 'forget', 'reset') as $controller) {
     $klein->with("/user/$controller", "user/$controller.php");
 }
 $klein->with("/user", "user/user.php");

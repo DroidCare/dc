@@ -34,7 +34,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     // error checking
     if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
-    else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');
+    // else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');
     if (is_empty(trim($full_name)))         $service->flash("Please enter your full name.", 'error');
     if (is_empty(trim($email)))             $service->flash("Please enter your e-mail address.", 'error');
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
