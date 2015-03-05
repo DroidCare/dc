@@ -30,11 +30,7 @@ $this->respond('GET', '/[i:user_id]/[:date]', function ($request, $response, $se
 
     if (is_empty($error_msg)) {
         $sql_query = "SELECT `date_time` FROM `appointment` WHERE `consultant_id` = ?";
-<<<<<<< HEAD
         $sql_query .= " AND `status` != 'cancelled'";
-=======
-        $sql_query .= "AND `status` != 'cancelled'";
->>>>>>> 4e1c6cb3492f163b518407c4eace0948e0ec932b
 
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;

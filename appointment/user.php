@@ -52,11 +52,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
         } else { // admin can view all
             $sql_query .= "1";
         }
-<<<<<<< HEAD
         $sql_query .= " AND `status` != 'cancelled'";
-=======
-        $sql_query .= "AND `status` != 'cancelled'";
->>>>>>> 4e1c6cb3492f163b518407c4eace0948e0ec932b
         
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
