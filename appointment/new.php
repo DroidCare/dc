@@ -10,7 +10,7 @@ POST /appointment/new
 * `consultant_id` [integer]
 * `date_time` (YYYY-MM-DD HH:mm:SS; Y-M-D H:i:s; should be multiple of 30 minutes)
 * `health_issue`
-* `attachment` [file: png, jpg, gif], stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API [todo]
+* `attachment` [base64-encoded string of the image]: for 'follow-up' type;
 * `type`: 'follow-up', 'referral'
 * `referrer_name`: may NULL if `type` is not 'referral'
 * `referrer_clinic`: may NULL if `type` is not 'referral'
@@ -28,7 +28,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $consultant_id = intval($mysqli->escape_string($request->param('consultant_id')));
     $date_time = $mysqli->escape_string($request->param('date_time'));
     $health_issue = $mysqli->escape_string($request->param('health_issue'));
-    $attachment = $request->files()['attachment'];
+    $attachment = $mysqli->escape_string($request->param('attachment'));
     $type = $mysqli->escape_string($request->param('type'));
     $referrer_name = $mysqli->escape_string($request->param('referrer_name'));
     $referrer_clinic = $mysqli->escape_string($request->param('referrer_clinic'));
@@ -48,34 +48,6 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty(trim($health_issue)))      $service->flash("Please enter the health issue.", 'error');
     if ($type === 'follow-up' && is_empty($attachment))
                                             $service->flash("Please enter the attachment image for follow up appointment.", 'error');
-    if ($type === 'follow-up' && !is_empty($attachment)) {
-        if ($attachment['error'] !== UPLOAD_ERR_OK) {
-            switch ($attachment['error']) {
-                case UPLOAD_ERR_NO_FILE:        $service->flash("Please enter the attachment image for follow up appointment.", 'error');
-                break;
-                case UPLOAD_ERR_INI_SIZE:
-                case UPLOAD_ERR_FORM_SIZE:      $service->flash("Please enter smaller size attachment image for follow up appointment.", 'error');
-                break;
-                default:                        $service->flash("Please enter the attachment image for follow up appointment: unkown error.", 'error');
-            }
-        } else { // $attachment['error'] === UPLOAD_ERR_OK
-            if ($attachment['size'] > 1000000) {
-                $service->flash("Please enter smaller size attachment image for follow up appointment.", 'error');
-            }
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
-            if (false === $ext = array_search(strtolower($finfo->file($attachment['tmp_name'])),
-                array(
-                    'jpg' => 'image/jpeg',
-                    'jpeg' => 'image/jpeg',
-                    'png' => 'image/png',
-                    'gif' => 'image/gif',
-                ), true)) {
-                $service->flash("Please enter attachment image (jpg, png, or gif) for follow up appointment.", 'error');
-            }
-        }
-
-    }
-    
                                             
     if (is_empty(trim($type)))              $service->flash("Please enter the type of appointment.", 'error');
     if ($type === 'referral' && is_empty(trim($referrer_name)))
@@ -92,41 +64,21 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        if ($type === 'follow-up') {
-            // Store the image somewhere
-            $upload_file = sprintf('%s.%s', sha1_file($attachment['tmp_name']), $ext);
+        // Store entry to database
+        $sql_query = "INSERT INTO `appointment`(`patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $mysqli->prepare($sql_query);
+        if ($stmt) {
 
-            // If folder does not exists, create it!
-            if (!file_exists($app->upload_dir)) {
-                mkdir($app->upload_dir, 0777, true);
+            $stmt->bind_param("iissssssis", $patient_id, $consultant_id, $date_time, $health_issue, $attachment, $type, $referrer_name, $referrer_clinic, $previous_id, $status);
+            $res = $stmt->execute();
+            $stmt->close();
+            if ($res) {
+                $service->flash("Appointment successfully created.", 'success');
             }
-        } else {
-            $upload_file = "";
         }
-        if ($type === 'follow-up' && !move_uploaded_file($attachment['tmp_name'], $app->upload_dir . $upload_file)) {
-            // error
-            $service->flash("Error: failed to move uploaded file.", 'error');
-            $return['status'] = -1;
-            $return['message'] = $service->flashes('error');
-        } else {
-            // Store entry to database
-            $sql_query = "INSERT INTO `appointment`(`patient_id`, `consultant_id`, `date_time`, `health_issue`, `attachment_paths`, `type`, `referrer_name`, `referrer_clinic`, `previous_id`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $mysqli->prepare($sql_query);
-            if ($stmt) {
-                $attachment_paths = $upload_file;
+        $return['status'] = 0;
+        $return['message'] = $service->flashes('success');
 
-                $stmt->bind_param("iissssssis", $patient_id, $consultant_id, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $status);
-                $res = $stmt->execute();
-                $stmt->close();
-                if ($res) {
-                    $service->flash("Appointment successfully created.", 'success');
-                }
-            }
-            $return['status'] = 0;
-            $return['message'] = $service->flashes('success');
-        }
-
-        
     } else {
         $return['status'] = -1;
         $return['message'] = $error_msg;

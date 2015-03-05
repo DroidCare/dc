@@ -22,8 +22,7 @@ List down appointments:
   * `consultant_id`
   * `consultant_name
   * `date_time` 
-  * `health_issue` 
-  * `attachment_paths` 
+  * `health_issue`
   * `type` 
   * `referrer_name` 
   * `referrer_clinic` 
@@ -45,7 +44,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `appointment`.`id`, `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `patient`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment_paths`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND ";
+        $sql_query = "SELECT `appointment`.`id`, `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `patient`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND ";
         if ($_SESSION['user_type'] === 'patient') {
             $sql_query .= "`patient_id` = ?";
         } else if ($_SESSION['user_type'] === 'consultant') {
@@ -53,7 +52,6 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
         } else { // admin can view all
             $sql_query .= "1";
         }
-        $sql_query .= " LIMIT 0,1";
         
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
@@ -65,7 +63,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($appointment_id, $patient_id, $patient_name, $consultant_id, $consultant_name, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
+                $stmt->bind_result($appointment_id, $patient_id, $patient_name, $consultant_id, $consultant_name, $date_time, $health_issue, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
                 $result = [];
                 while ($stmt->fetch()) {
                     array_push($result,
@@ -77,7 +75,6 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
                             "consultant_name" => $consultant_name,
                             "date_time" => $date_time,
                             "health_issue" => $health_issue,
-                            "attachment_paths" => $attachment_paths,
                             "type" => $type,
                             "referrer_name" => $referrer_name,
                             "referrer_clinic" => $referrer_clinic,

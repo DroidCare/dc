@@ -2,42 +2,50 @@
 /*
 ### Get appointment's attachment
 ```
-GET /appointment/attachment/[s:attachment_id]
+GET /appointment/attachment/[i:id]
 ```
 
 #### Parameters
-* `attachment_name` from `attachment_paths`
+* `id`, appointment_id
 
 #### Return
-* `status`: `0` on success, `-1` otherwise
-* `message`: array of error messages; if success, base-64 encoded string of the image file
+* On success, image stream; **NOTE:** there is no usual status/message return.
+* On error
+  * `status`: -1
+  * `message`: array of error/success messages
 
 */
-$this->respond('GET', '/[:attachment_id]', function ($request, $response, $service, $app) {
+$this->respond('GET', '/[i:id]', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
-    $attachment_id = $mysqli->escape_string($request->param('attachment_id'));
+    $id = $mysqli->escape_string($request->param('id'));
 
     // error checking
-    if (is_empty(trim($attachment_id)))     $service->flash("Please enter the attachment id.", 'error');    
+    if (is_empty(trim($id)))     $service->flash("Please enter the appointment id.", 'error');    
 
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        if (!file_exists($app->upload_dir . $attachment_id)) {
-            //error
-            $service->flash("Error: File not found.", 'error');
-            $return['status'] = -1;
-            $return['message'] = $service->flashes('error');
-        } else {
-            // ok
-            $return['status'] = 0;
-            $return['message'] = base64_encode(file_get_contents($app->upload_dir . $attachment_id));
-        }
+        $sql_query = "SELECT `attachment` FROM `appointment` WHERE `id` = ? LIMIT 0,1";
+        $stmt = $mysqli->prepare($sql_query);
+        $stmt->bind_param("i", $id);
+        $res = $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($attachment);
+        $stmt->fetch();
 
-        
+        // http://stackoverflow.com/a/6061602/917957
+        $img = base64_decode($attachment);
+        $f = finfo_open();
+
+        $mime_type = finfo_buffer($f, $img, FILEINFO_MIME_TYPE);
+
+        header('Content-Type: '. $mime_type);
+        return $img;
+
     } else {
         $return['status'] = -1;
         $return['message'] = $error_msg;
+        return json_encode($return);
     }
-    return json_encode($return);
+    
 });

@@ -18,7 +18,7 @@ POST /appointment/[i:id]
   * `consultant_name
   * `date_time` 
   * `health_issue` 
-  * `attachment_paths` 
+  * `attachment` 
   * `type` 
   * `referrer_name` 
   * `referrer_clinic` 
@@ -36,7 +36,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `patient`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment_paths`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND `appointment`.`id` = ? LIMIT 0,1";
+        $sql_query = "SELECT `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `patient`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND `appointment`.`id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
@@ -46,7 +46,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($patient_id, $patient_name, $consultant_id, $consultant_name, $date_time, $health_issue, $attachment_paths, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
+                $stmt->bind_result($patient_id, $patient_name, $consultant_id, $consultant_name, $date_time, $health_issue, $attachment, $type, $referrer_name, $referrer_clinic, $previous_id, $remarks, $status);
                 $stmt->fetch();
 
                 // "admin" can see other user's details
@@ -70,7 +70,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
                         "consultant_name" => $consultant_name,
                         "date_time" => $date_time,
                         "health_issue" => $health_issue,
-                        "attachment_paths" => $attachment_paths,
+                        "attachment" => $attachment,
                         "type" => $type,
                         "referrer_name" => $referrer_name,
                         "referrer_clinic" => $referrer_clinic,

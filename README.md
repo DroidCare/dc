@@ -140,8 +140,8 @@ POST /appointment/new
 | `consultant_id`   | `integer` | User id of type 'consultant'
 | `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`; should be multiple of 30 minutes
 | `health_issue`    | `string` | Text describing the health issue
-| `attachment`      | `string` | File: png, jpg, gif. stored as `attachment_paths`: for 'follow-up' type; uploaded image inaccessible directly, must be routed via API `/appointment/attachment/[s:attachment_id]`
-| `typ(Optional) User id. If not set, user id used is from the session, i.e. current logged in user.e`            | `string` | '`follow-up`', or '`referral`'
+| `attachment`      | `string` | Base64-encoded string of the image, may be `NULL` if `type` is not '`follow-up`'
+| `type`            | `string` | '`follow-up`', '`referral`', or '`normal`'
 | `referrer_name`   | `string` | may be `NULL` if `type` is not '`referral`'
 | `referrer_clinic` | `string` | may be `NULL` if `type` is not '`referral`'
 | `previous_id`     | `integer` | may be `NULL` if `type` is not '`follow-up`'
@@ -153,17 +153,19 @@ POST /appointment/new
 
 ### Get appointment's attachment
 ```
-GET /appointment/attachment/[s:attachment_id]
+GET /appointment/attachment/[i:id]
 ```
 
 #### Parameters
 | Name              | Type   | Description
 | ----------------- | ------ | -----------
-| `attachment_id`   | `string`  | Appointment's attachment id, returned from `/appointment/[i:id]` or `/appointment/user` at `attachment_paths` field
+| `id`              | `integer` | Appointment id.
 
 #### Return
-* `status`: `0` on success, `-1` otherwise
-* `message`: array of error messages; if success, base-64 encoded string of the image file
+* On success, image stream; **NOTE:** there is no usual status/message return.
+* On error
+  * `status`: -1
+  * `message`: array of error/success messages
 
 ### Update Appointment Status (by Consultant)
 ```
@@ -202,7 +204,7 @@ POST /appointment/[i:id]
   * `consultant_name`
   * `date_time` 
   * `health_issue` 
-  * `attachment_paths` 
+  * `attachment`
   * `type` 
   * `referrer_name` 
   * `referrer_clinic` 
@@ -236,7 +238,6 @@ List down appointments:
   * `consultant_name`
   * `date_time`
   * `health_issue`
-  * `attachment_paths`
   * `type`
   * `referrer_name`
   * `referrer_clinic` 
