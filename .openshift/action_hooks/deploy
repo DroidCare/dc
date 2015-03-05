@@ -1,2 +1,2 @@
-echo "Updating Composer"
+echo Updating Composer
 php composer.phar update
