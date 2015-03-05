@@ -25,7 +25,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         // Update database entry
-        $status = 'finished';
+        $status = 'cancelled';
         $sql_query = "UPDATE `appointment` SET `status` = ? WHERE `id` = ?";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
