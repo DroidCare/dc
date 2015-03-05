@@ -21,7 +21,7 @@ POST /user/[i:id]
   * `passport_number`
   * `nationality`
   * `date_of_birth`
-  * `notification`: 'email', 'sms', or 'all'
+  * `notification`: 'local', 'email', 'sms', or 'all'
   * `type`: 'patient', 'admin', or 'consultant'
 
 */

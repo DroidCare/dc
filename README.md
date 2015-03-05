@@ -46,7 +46,7 @@ POST /user/register
 | `passport_number` | `string` | User's passport number
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
-| `notification`    | `string` | Notification preference: "`email`", "`sms`", or "`all`"
+| `notification`    | `string` | Notification preference: "`local`", "`email`", "`sms`", or "`all`"
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -110,7 +110,7 @@ POST /user/update
 | `passport_number` | `string` | User's passport number
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
-| `notification`    | `string` | Notification preference: "`email`", "`sms`", or "`all`"
+| `notification`    | `string` | Notification preference: "`local`", "`email`", "`sms`", or "`all`"
 | `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return

@@ -14,7 +14,7 @@ POST /user/update
 * `passport_number`
 * `nationality`
 * `date_of_birth` (YYYY-MM-DD)
-* `notification`: 'email', 'sms', or 'all'
+* `notification`: 'local', 'email', 'sms', or 'all'
 * `session_id`, returned at login
 
 #### Return

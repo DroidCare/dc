@@ -14,7 +14,7 @@ POST /user/register
 * `passport_number`
 * `nationality`
 * `date_of_birth` (YYYY-MM-DD)
-* `notification`: 'email', 'sms', or 'all'
+* `notification`: 'local', 'email', 'sms', or 'all'
 
 #### Return
 * `status`: 0 on success, -1 otherwise
