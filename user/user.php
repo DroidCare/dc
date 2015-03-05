@@ -17,11 +17,12 @@ POST /user/[i:id]
   * `email`
   * `full_name`
   * `address`
-  * `gender`
+  * `gender`: 'male', or 'female'
   * `passport_number`
   * `nationality`
   * `date_of_birth`
-  * `type`
+  * `notification`: 'email', 'sms', or 'all'
+  * `type`: 'patient', 'admin', or 'consultant'
 
 */
 $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $app) {
@@ -41,7 +42,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
+        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
@@ -51,7 +52,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $type);
+                $stmt->bind_result($full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $type);
                 $stmt->fetch();
                 $result = array(
                     "id" => $id,
@@ -62,6 +63,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
                     "passport_number" => $passport_number,
                     "nationality" => $nationality,
                     "date_of_birth" => $date_of_birth,
+                    "notification" => $notification,
                     "type" => $type
                 );
 

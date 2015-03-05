@@ -42,10 +42,11 @@ POST /user/register
 | `password`        | `string` | User's password, 6-32 character long
 | `full_name`       | `string` | User's full name
 | `address`         | `string` | User's address
-| `gender`          | `string` | "`Male`" or "`Female`"
+| `gender`          | `string` | "`male`" or "`female`"
 | `passport_number` | `string` | User's passport number
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
+| `notification`    | `string` | Notification preference: "`email`", "`sms`", or "`all`"
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -89,6 +90,7 @@ POST /user/
   * `passport_number`
   * `nationality`
   * `date_of_birth`
+  * `notification`
   * `type`
 
 ### Update User Details
@@ -108,6 +110,7 @@ POST /user/update
 | `passport_number` | `string` | User's passport number
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
+| `notification`    | `string` | Notification preference: "`email`", "`sms`", or "`all`"
 | `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return

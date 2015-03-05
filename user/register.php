@@ -10,10 +10,11 @@ POST /user/register
 * `password`
 * `full_name`
 * `address`
-* `gender`: 'Male' or 'Female'
+* `gender`: 'male' or 'female'
 * `passport_number`
 * `nationality`
 * `date_of_birth` (YYYY-MM-DD)
+* `notification`: 'email', 'sms', or 'all'
 
 #### Return
 * `status`: 0 on success, -1 otherwise
@@ -30,6 +31,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $passport_number = $mysqli->escape_string($request->param('passport_number'));
     $nationality = $mysqli->escape_string($request->param('nationality'));
     $date_of_birth = $mysqli->escape_string($request->param('date_of_birth'));
+    $notification = $mysqli->escape_string($request->param('notification'));
     $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
 
     // error checking
@@ -43,6 +45,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty(trim($gender)))            $service->flash("Please specify your gender.", 'error');
     if (is_empty(trim($passport_number)))   $service->flash("Please enter your passport number.", 'error');
     if (is_empty(trim($nationality)))       $service->flash("Please enter your nationality.", 'error');
+    if (is_empty(trim($notification)))       $service->flash("Please enter your notification preference.", 'error');
     if (is_empty(trim($date_of_birth)))     $service->flash("Please enter your date of birth.", 'error');
     if (($dob_timestamp = strtotime($date_of_birth)) === false)
                                             $service->flash("Please enter a valid date of birth.", 'error');
@@ -67,11 +70,11 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
-        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `type`)
+        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `type`)
                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("sssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $type);
+            $stmt->bind_param("sssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $type);
             $res = $stmt->execute();
             $stmt->close();
             if ($res) {
