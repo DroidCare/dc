@@ -1,2 +1,2 @@
 echo Updating Composer
-php composer.phar update
+php $OPENSHIFT_REPO_DIR/composer.phar update
