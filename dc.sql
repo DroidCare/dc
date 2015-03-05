@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.11.203.130:3306
--- Generation Time: Mar 04, 2015 at 10:08 AM
+-- Generation Time: Mar 05, 2015 at 01:34 PM
 -- Server version: 5.5.41
 -- PHP Version: 5.3.3
 
@@ -19,31 +19,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `dc`
 --
-CREATE DATABASE IF NOT EXISTS `dc` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `dc`;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `appointment`
---
-
-DROP TABLE IF EXISTS `appointment`;
-CREATE TABLE IF NOT EXISTS `appointment` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `patient_id` int(11) NOT NULL,
-  `consultant_id` int(11) NOT NULL,
-  `date_time` datetime NOT NULL,
-  `health_issue` text NOT NULL,
-  `attachment_paths` text NOT NULL,
-  `type` enum('follow-up','referral','normal') NOT NULL DEFAULT 'normal',
-  `referrer_name` varchar(128) NOT NULL DEFAULT '',
-  `referrer_clinic` varchar(128) NOT NULL DEFAULT '',
-  `previous_id` int(11) DEFAULT NULL,
-  `remarks` text NOT NULL,
-  `status` enum('pending','accepted','rejected','finished') NOT NULL DEFAULT 'pending',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
@@ -59,10 +34,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   `full_name` varchar(128) NOT NULL,
   `address` varchar(128) NOT NULL,
   `passport_number` varchar(16) NOT NULL,
-  `gender` enum('Male','Female') NOT NULL,
+  `gender` enum('male','female') NOT NULL,
   `date_of_birth` date NOT NULL,
   `nationality` varchar(64) NOT NULL,
   `type` enum('admin','consultant','patient') NOT NULL,
+  `notification` enum('local','email','sms','all') NOT NULL DEFAULT 'local',
+  `password_token` varchar(255) DEFAULT NULL,
+  `token_expiry` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
