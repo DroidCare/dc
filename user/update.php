@@ -35,8 +35,12 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $notification = $mysqli->escape_string($request->param('notification'));
     $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
 
+    if (is_empty(trim($id)) && isset($_SESSION['user_id'])) {
+        $id = $_SESSION['user_id'];
+    }
+
     // error checking
-    if (is_empty(trim($id)))                $service->flash("Please enter a user id.", 'error');
+    // if (is_empty(trim($id)))                $service->flash("Please enter a user id.", 'error');
     if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
     // else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');
     if (is_empty(trim($full_name)))         $service->flash("Please enter your full name.", 'error');
