@@ -85,7 +85,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
                 }
 
             } else {
-                $service->flash("User not found", 'error');
+                $service->flash("Appointment not found", 'error');
                 $return['status'] = -1;
                 $return['message'] = $service->flashes('error');
             }
