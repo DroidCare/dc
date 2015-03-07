@@ -78,5 +78,7 @@ $this->respond('GET', '/[s:password_token]', function ($request, $response, $ser
         $return['status'] = -1;
         $return['message'] = $error_msg;
     }
-    return json_encode($return);
+    $service->render('user/reset.phtml', array('return' => $return));
+
+    //return json_encode($return);
 });
