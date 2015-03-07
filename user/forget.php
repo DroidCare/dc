@@ -83,7 +83,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             $altBody = "Dear valued customer\r\n
               We have received a request for password reset. If you think you have done this request, please click the link below.\r\n
               $url\r\n
-              If you have not requested a password reset, kindly ignore this e-mail.\r\n
+              If you have not requested a password reset, kindly ignore this e-mail.\r\n\r\n
               Sincerely,\r\n
               DroidCare team";
 
@@ -101,7 +101,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                 $return['status'] = 0;
                 $return['message'] = $service->flashes('success');
             } else {
-                $service->flash("Fail to send e-mail." . $mail->ErrorInfo, 'error');
+                $service->flash("Failed to send e-mail." . $mail->ErrorInfo, 'error');
                 $return['status'] = -1;
                 $return['message'] = $service->flashes('error');
             }

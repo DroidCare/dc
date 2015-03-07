@@ -288,8 +288,10 @@ GET appointment/timeslot/[i:user_id]/[s:date]
 ```
 
 #### Parameters
-* `user_id` [integer]: user id, should be of 'consultant' 
-* `date` [string]: in YYYY-MM-DD format (Y-m-d)
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `user_id`         | `integer` | user id, should be of 'consultant'-type
+| `date`            | `string` | YYYY-MM-DD (`Y-m-d`)
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -315,7 +317,9 @@ POST /user/forget
 ```
 
 #### Parameters
-* `email`
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `email`           | `string` | user email
 
 #### Return
 * `status`: 0 on success, -1 otherwise
@@ -328,7 +332,24 @@ GET /user/reset/[s:password_token]
 Users are expected to access this URL from e-mail sent by `/user/forget`
 
 #### Parameters
-* `password_token`: Generated from `/user/forget`
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `password_token`  | `string` | Generated from `/user/forget` and sent to user's e-mail
+
+#### Return
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error/success messages
+
+### Notify patient on appointment
+```
+POST /appointment/notify
+```
+
+#### Parameters
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `id`              | `integer` | appointment id, which appointment to be notified
+| `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
 * `status`: 0 on success, -1 otherwise

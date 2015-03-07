@@ -73,6 +73,7 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
             '/appointment/user',
             '/appointment/cancel',
             '/appointment/edit',
+            '/appointment/notify',
             '/appointment',
             )
         , TRUE) && 
@@ -91,7 +92,8 @@ $klein->respond(function ($request, $response, $service, $app) use ($klein) {
         // Besides these actions, error 404 Not Found or 405 Method Not Allowed are returned (by klein.php)
         ) {
 
-        function session_is_registered($x) {return isset($_SESSION[$x]);}
+        // function session_is_registered($x) {return isset($_SESSION[$x]);}
+
         // Start session; only start session when required.
         if (!is_empty($request->param('session_id'))) {
             // Take note on [Session Hijacking Attack](https://www.owasp.org/index.php/Session_hijacking_attack)
@@ -124,7 +126,7 @@ foreach(array('register', 'login', 'update', 'logout', 'consultant', 'forget', '
 }
 $klein->with("/user", "user/user.php");
 
-foreach(array('new', 'attachment', 'status', 'user', 'cancel', 'edit', 'timeslot') as $controller) {
+foreach(array('new', 'attachment', 'status', 'user', 'cancel', 'edit', 'timeslot', 'notify') as $controller) {
     $klein->with("/appointment/$controller", "appointment/$controller.php");
 }
 $klein->with("/appointment", "appointment/appointment.php");
