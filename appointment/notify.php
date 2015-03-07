@@ -48,7 +48,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                 </head>
                 <body>
                   <p>Dear $patient_name,</p>
-                  <p>This is a reminder that you have " . ($type !== "normal") ? "a " . $type : "an " . " appointment with $consultant_name at " . date("l, j F Y, H:i:s", $date_time) . ".</p>
+                  <p>This is a reminder that you have an appointment with $consultant_name at " . date("l, j F Y, H:i", $date_time) . ".</p>
                   <p>The health issue to be discussed is: $health_issue.</p>
 
                   <p>Please arrive at the clinic 5 minutes before the stated time.</p>
@@ -58,11 +58,12 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                 </body>
                 </html>
                 ";
-                $altBody = "Dear valued customer\r\n
-                  This is a reminder that you have an appointment with $consultant_name at " . date("l, j F Y, H:i:s", strtotime($date_time)) . ".\r\n
-                  Please arrive at the clinic 5 minutes before the stated time.\r\n\r\n
-                  Sincerely,\r\n
-                  DroidCare team";
+                $altBody = "Dear $patient_name,\r\n"
+                  ."This is a reminder that you have an appointment with $consultant_name at " . date("l, j F Y, H:i", strtotime($date_time)) . ".\r\n"
+                  ."The health issue to be discussed is: $health_issue.\r\n"
+                  ."Please arrive at the clinic 5 minutes before the stated time.\r\n\r\n"
+                  ."Sincerely,\r\n"
+                  ."DroidCare team";
 
                 // Send e-mail via PHPMailer
                 $mail = $app->mail;

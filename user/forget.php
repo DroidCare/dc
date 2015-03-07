@@ -80,12 +80,12 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             </body>
             </html>
             ";
-            $altBody = "Dear valued customer\r\n
-              We have received a request for password reset. If you think you have done this request, please click the link below.\r\n
-              $url\r\n
-              If you have not requested a password reset, kindly ignore this e-mail.\r\n\r\n
-              Sincerely,\r\n
-              DroidCare team";
+            $altBody = "Dear valued customer\r\n"
+              ."We have received a request for password reset. If you think you have done this request, please click the link below.\r\n
+              $url\r\n"
+              ."If you have not requested a password reset, kindly ignore this e-mail.\r\n\r\n"
+              ."Sincerely,\r\n"
+              ."DroidCare team";
 
             // Send e-mail via PHPMailer
             $mail = $app->mail;
