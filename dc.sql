@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.11.203.130:3306
--- Generation Time: Mar 05, 2015 at 01:34 PM
+-- Generation Time: Mar 09, 2015 at 12:53 PM
 -- Server version: 5.5.41
 -- PHP Version: 5.3.3
 
@@ -19,6 +19,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `dc`
 --
+CREATE DATABASE IF NOT EXISTS `dc` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `dc`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointment`
+--
+
+DROP TABLE IF EXISTS `appointment`;
+CREATE TABLE IF NOT EXISTS `appointment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patient_id` int(11) NOT NULL,
+  `consultant_id` int(11) NOT NULL,
+  `date_time` datetime NOT NULL,
+  `health_issue` text NOT NULL,
+  `attachment` mediumtext COMMENT 'max 16MB',
+  `type` enum('follow-up','referral','normal') NOT NULL DEFAULT 'normal',
+  `referrer_name` varchar(128) NOT NULL DEFAULT '',
+  `referrer_clinic` varchar(128) NOT NULL DEFAULT '',
+  `previous_id` int(11) DEFAULT NULL,
+  `remarks` text NOT NULL,
+  `status` enum('pending','accepted','rejected','finished','cancelled') NOT NULL DEFAULT 'pending',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
