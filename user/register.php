@@ -15,6 +15,7 @@ POST /user/register
 * `nationality`
 * `date_of_birth` (YYYY-MM-DD)
 * `notification`: 'local', 'email', 'sms', or 'all'
+* `location`: country
 
 #### Return
 * `status`: 0 on success, -1 otherwise
@@ -32,11 +33,11 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $nationality = $mysqli->escape_string($request->param('nationality'));
     $date_of_birth = $mysqli->escape_string($request->param('date_of_birth'));
     $notification = $mysqli->escape_string($request->param('notification'));
+    $location = $mysqli->escape_string($request->param('location'));
     $type = 'patient'; // can be 'patient', 'admin', or 'consultant';
 
     // error checking
     if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
-    // else if (strlen($password) > 32)        $service->flash("Your password must be less than 32 characters.", 'error');
     if (is_empty(trim($full_name)))         $service->flash("Please enter your full name.", 'error');
     if (is_empty(trim($email)))             $service->flash("Please enter your e-mail address.", 'error');
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
@@ -45,7 +46,8 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty(trim($gender)))            $service->flash("Please specify your gender.", 'error');
     if (is_empty(trim($passport_number)))   $service->flash("Please enter your passport number.", 'error');
     if (is_empty(trim($nationality)))       $service->flash("Please enter your nationality.", 'error');
-    if (is_empty(trim($notification)))       $service->flash("Please enter your notification preference.", 'error');
+    if (is_empty(trim($notification)))      $service->flash("Please enter your notification preference.", 'error');
+    if (is_empty(trim($location)))          $service->flash("Please enter your location.", 'error');
     if (is_empty(trim($date_of_birth)))     $service->flash("Please enter your date of birth.", 'error');
     if (($dob_timestamp = strtotime($date_of_birth)) === false)
                                             $service->flash("Please enter a valid date of birth.", 'error');
@@ -70,11 +72,11 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
-        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `type`)
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `type`)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("sssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $type);
+            $stmt->bind_param("ssssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
             $res = $stmt->execute();
             $stmt->close();
             if ($res) {

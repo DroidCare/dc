@@ -22,6 +22,8 @@ POST /user/[i:id]
   * `nationality`
   * `date_of_birth`
   * `notification`: 'local', 'email', 'sms', or 'all'
+  * `location`: country
+  * `specialization`: not empty if consultant
   * `type`: 'patient', 'admin', or 'consultant'
 
 */
@@ -42,7 +44,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
+        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `specialization`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
@@ -52,7 +54,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $type);
+                $stmt->bind_result($full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $specialization, $type);
                 $stmt->fetch();
                 $result = array(
                     "id" => $id,
@@ -64,6 +66,8 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
                     "nationality" => $nationality,
                     "date_of_birth" => $date_of_birth,
                     "notification" => $notification,
+                    "location" => $location,
+                    "specialization" => $specialization,
                     "type" => $type
                 );
 

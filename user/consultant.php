@@ -19,7 +19,7 @@ $this->respond('GET', '/?[i:id]?', function ($request, $response, $service, $app
     $mysqli = $app->db;
     $type = 'consultant';
 
-    $sql_query = "SELECT `id`, `full_name` FROM `user` WHERE `type` = ?";
+    $sql_query = "SELECT `id`, `full_name`, `specialization` FROM `user` WHERE `type` = ?";
     $stmt = $mysqli->prepare($sql_query);
     $num_rows = 0;
     if ($stmt) {
@@ -35,7 +35,8 @@ $this->respond('GET', '/?[i:id]?', function ($request, $response, $service, $app
             while ($stmt->fetch()) {
                 array_push($result, array(
                     "id" => $id,
-                    "full_name" => $full_name
+                    "full_name" => $full_name,
+                    "specialization" => $specialization
                 ));
             }
 
