@@ -36,7 +36,7 @@ $this->respond('POST', '/[i:id]', function ($request, $response, $service, $app)
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `patient`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND `appointment`.`id` = ? LIMIT 0,1";
+        $sql_query = "SELECT `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `consultant`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND `appointment`.`id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
