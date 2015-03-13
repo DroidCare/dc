@@ -48,6 +48,7 @@ POST /user/register
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
 | `notification`    | `string` | Notification preference: "`local`", "`email`", "`sms`", or "`all`"
+| `location`        | `string` | User's country location
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
@@ -87,12 +88,14 @@ POST /user/
   * `email`
   * `full_name`
   * `address`
-  * `gender`
+  * `gender`: 'male', or 'female'
   * `passport_number`
   * `nationality`
   * `date_of_birth`
-  * `notification`
-  * `type`
+  * `notification`: 'local', 'email', 'sms', or 'all'
+  * `location`: country
+  * `specialization`: not empty if consultant
+  * `type`: 'patient', 'admin', or 'consultant'
 
 ### Update User Details
 ```
@@ -112,6 +115,7 @@ POST /user/update
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
 | `notification`    | `string` | Notification preference: "`local`", "`email`", "`sms`", or "`all`"
+| `location`        | `string` | User's country location
 | `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
@@ -157,7 +161,7 @@ POST /appointment/new
 
 ### Get appointment's attachment
 ```
-GET /appointment/attachment/[i:id]
+REQUEST /appointment/attachment/[i:id]
 ```
 
 #### Parameters
@@ -166,10 +170,8 @@ GET /appointment/attachment/[i:id]
 | `id`              | `integer` | Appointment id.
 
 #### Return
-* On success, image stream; **NOTE:** there is no usual status/message return.
-* On error
-  * `status`: -1
-  * `message`: array of error/success messages
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error messages; or base-64 encoded image
 
 ### Update Appointment Status (by Consultant)
 ```

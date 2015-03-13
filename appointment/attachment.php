@@ -2,20 +2,18 @@
 /*
 ### Get appointment's attachment
 ```
-GET /appointment/attachment/[i:id]
+REQUEST /appointment/attachment/[i:id]
 ```
 
 #### Parameters
 * `id`, appointment_id
 
 #### Return
-* On success, image stream; **NOTE:** there is no usual status/message return.
-* On error
-  * `status`: -1
-  * `message`: array of error/success messages
+* `status`: 0 on success, -1 otherwise
+* `message`: array of error messages; or base-64 encoded image
 
 */
-$this->respond('GET', '/[i:id]', function ($request, $response, $service, $app) {
+$this->respond('/[i:id]', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $id = $mysqli->escape_string($request->param('id'));
 
@@ -34,13 +32,16 @@ $this->respond('GET', '/[i:id]', function ($request, $response, $service, $app) 
         $stmt->fetch();
 
         // http://stackoverflow.com/a/6061602/917957
-        $img = base64_decode($attachment);
-        $f = finfo_open();
+        // $img = base64_decode($attachment);
+        // $f = finfo_open();
 
-        $mime_type = finfo_buffer($f, $img, FILEINFO_MIME_TYPE);
+        // $mime_type = finfo_buffer($f, $img, FILEINFO_MIME_TYPE);
 
-        header('Content-Type: '. $mime_type);
-        return $img;
+        // header('Content-Type: '. $mime_type);
+        // return $img;
+        $return['status'] = 1;
+        $return['message'] = $attachment;
+        return json_encode($return);
 
     } else {
         $return['status'] = -1;
