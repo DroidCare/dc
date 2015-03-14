@@ -2,11 +2,11 @@
 /*
 ### Get list of consultant
 ```
-GET /user/consultant
+GET /user/consultant/[s:location]
 ```
 
 #### Parameters
-none
+* `location`: (optional) country location of consultant
 
 #### Return
 * `status`: 0 on success, -1 otherwise
@@ -15,21 +15,30 @@ none
   * `full_name`
 
 */
-$this->respond('GET', '/?[i:id]?', function ($request, $response, $service, $app) {
+$this->respond('GET', '/?[s:location]?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $type = 'consultant';
+    $location = $mysqli->escape_string($request->param('location'));
 
     $sql_query = "SELECT `id`, `full_name`, `specialization` FROM `user` WHERE `type` = ?";
+    if (!is_empty(trim($location))) {
+        $sql_query .= " AND `location` = ?";
+    }
     $stmt = $mysqli->prepare($sql_query);
     $num_rows = 0;
     if ($stmt) {
-        $stmt->bind_param("s", $type);
+        if (!is_empty(trim($location))) {
+            $stmt->bind_param("ss", $type, $location);
+        } else {
+            $stmt->bind_param("s", $type);
+        }
+        
         $res = $stmt->execute();
         $stmt->store_result();
         $num_rows = $stmt->num_rows;
 
         if ($num_rows > 0) {
-            $stmt->bind_result($id, $full_name);
+            $stmt->bind_result($id, $full_name, $specialization);
 
             $result = [];
             while ($stmt->fetch()) {

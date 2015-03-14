@@ -306,7 +306,10 @@ GET /user/consultant
 ```
 
 #### Parameters
-none
+
+| Name              | Type   | Description
+| ----------------- | ------ | -----------
+| `location`        | `string` | (optional) Consultant's country location
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
