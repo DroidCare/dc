@@ -157,7 +157,7 @@ POST /appointment/new
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
-* `message`: array of success/error messages
+* `message`: array of error messages; OR object containing success message and ID of recently inserted row.
 
 ### Get appointment's attachment
 ```

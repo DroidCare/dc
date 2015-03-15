@@ -19,7 +19,7 @@ POST /appointment/new
 
 #### Return
 * `status`: `0` on success, `-1` otherwise
-* `message`: array of success/error messages
+* `message`: array of error messages; OR object containing success message and ID of recently inserted row.
 
 */
 $this->respond('POST', '/?', function ($request, $response, $service, $app) {
@@ -73,11 +73,22 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             $res = $stmt->execute();
             $stmt->close();
             if ($res) {
-                $service->flash("Appointment successfully created.", 'success');
+
+                $sql_query = "SELECT LAST_INSERT_ID()";
+                $stmt = $mysqli->prepare($sql_query);
+                $res = $stmt->execute();
+                $stmt->bind_result($id);
+                $stmt->fetch();
+                $stmt->close();
+                $result = array(
+                    "id" => $id,
+                    "message" => "Appointment successfully created."
+                );
+                $service->flash(json_encode($result), 'success');
             }
         }
         $return['status'] = 0;
-        $return['message'] = $service->flashes('success');
+        $return['message'] = json_decode($service->flashes('success')[0]);
 
     } else {
         $return['status'] = -1;
