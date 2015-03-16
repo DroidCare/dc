@@ -24,6 +24,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
+        // TODO database check first?
         // Update database entry
         $status = 'cancelled';
         $sql_query = "UPDATE `appointment` SET `status` = ? WHERE `id` = ?";

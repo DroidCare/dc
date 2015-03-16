@@ -48,7 +48,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                 </head>
                 <body>
                   <p>Dear $patient_name,</p>
-                  <p>This is a reminder that you have an appointment with $consultant_name at " . date("l, j F Y, H:i", $date_time) . ".</p>
+                  <p>This is a reminder that you have an appointment with $consultant_name at " . date("l, j F Y, H:i", strtotime($date_time)) . ".</p>
                   <p>The health issue to be discussed is: $health_issue.</p>
 
                   <p>Please arrive at the clinic 5 minutes before the stated time.</p>
