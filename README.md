@@ -244,6 +244,7 @@ List down appointments:
   * `consultant_name`
   * `date_time`
   * `health_issue`
+  * `attachment` (base64-encoded string of the image)
   * `type`
   * `referrer_name`
   * `referrer_clinic` 
