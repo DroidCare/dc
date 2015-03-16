@@ -39,7 +39,7 @@ $this->respond('/[i:id]', function ($request, $response, $service, $app) {
 
         // header('Content-Type: '. $mime_type);
         // return $img;
-        $return['status'] = 1;
+        $return['status'] = 0;
         $return['message'] = $attachment;
         return json_encode($return);
 
