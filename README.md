@@ -21,6 +21,7 @@ Front-end Android app can be found at [DroidCare](https://github.com/DroidCare/D
 All return values are in JSON string format, with two keys:
 * `status`: `0` on success, `-1` otherwise
 * `message`: contains the error/success messages or data requested
+**Note**: "`REQUEST`"-type request accepts both `POST` and `GET`.
 
 ### Request URL
 ```
@@ -288,7 +289,7 @@ POST /appointment/edit
 
 ### Get consultant's available time slot
 ```
-GET appointment/timeslot/[i:user_id]/[s:date]
+REQUEST appointment/timeslot/[i:user_id]/[s:date]
 ```
 
 #### Parameters
@@ -303,7 +304,7 @@ GET appointment/timeslot/[i:user_id]/[s:date]
 
 ### Get list of consultant
 ```
-GET /user/consultant
+REQUEST /user/consultant
 ```
 
 #### Parameters
