@@ -2,7 +2,7 @@
 /*
 ### Get list of consultant
 ```
-GET /user/consultant/[s:location]
+REQUEST /user/consultant/[s:location]
 ```
 
 #### Parameters
@@ -15,7 +15,7 @@ GET /user/consultant/[s:location]
   * `full_name`
 
 */
-$this->respond('GET', '/?[s:location]?', function ($request, $response, $service, $app) {
+$this->respond('/?[s:location]?', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $type = 'consultant';
     $location = $mysqli->escape_string($request->param('location'));
