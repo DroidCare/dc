@@ -2,7 +2,7 @@
 /*
 ### Get consultant's available time slot
 ```
-GET appointment/timeslot/[i:user_id]/[s:date]
+REQUEST appointment/timeslot/[i:user_id]/[s:date]
 ```
 
 #### Parameters
@@ -14,7 +14,7 @@ GET appointment/timeslot/[i:user_id]/[s:date]
 * `message`: array of error messages; if success, array of date_time representing **time start** of consultant's **AVAILABLE** time slot.
 
 */
-$this->respond('GET', '/[i:user_id]/[:date]', function ($request, $response, $service, $app) {
+$this->respond('/[i:user_id]/[:date]', function ($request, $response, $service, $app) {
     $mysqli = $app->db;
     $user_id = intval($mysqli->escape_string($request->param('user_id')));
     $date = $mysqli->escape_string($request->param('date'));
