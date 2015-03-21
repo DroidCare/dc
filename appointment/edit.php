@@ -11,6 +11,8 @@ POST /appointment/edit
 * `consultant_id` [integer]
 * `date_time`
 * `health_issue`
+* `referrer_name`: may NULL if `type` is not 'referral'
+* `referrer_clinic`: may NULL if `type` is not 'referral'
 * `session_id`
 
 #### Return
@@ -25,6 +27,8 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $consultant_id = intval($mysqli->escape_string($request->param('consultant_id')));
     $date_time = $mysqli->escape_string($request->param('date_time'));
     $health_issue = $mysqli->escape_string($request->param('health_issue'));
+    $referrer_name = $mysqli->escape_string($request->param('referrer_name'));
+    $referrer_clinic = $mysqli->escape_string($request->param('referrer_clinic'));
 
     if (is_empty(trim($patient_id)) && isset($_SESSION['user_id'])) {
         $patient_id = intval($_SESSION['user_id']);
@@ -35,6 +39,10 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     if (is_empty(trim($patient_id)))        $service->flash("Please enter the patient id.", 'error');
     if (is_empty(trim($consultant_id)))     $service->flash("Please enter the consultant id.", 'error');
     if (is_empty(trim($health_issue)))      $service->flash("Please enter the health issue.", 'error');
+    // if ($type === 'referral' && is_empty(trim($referrer_name)))
+    //                                         $service->flash("Please enter the referrer name.", 'error');
+    // if ($type === 'referral' && is_empty(trim($referrer_clinic)))
+    //                                         $service->flash("Please enter the referrer clinic.", 'error');
     if (is_empty(trim($date_time)))         $service->flash("Please enter the date and time of appointment.", 'error');
     if (($dob_timestamp = strtotime($date_time)) === false)
                                             $service->flash("Please enter a valid date and time.", 'error');
@@ -43,10 +51,10 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "UPDATE `appointment` SET `patient_id` = ?, `consultant_id` = ?, `health_issue` = ?, `date_time` = ? WHERE `id` = ?";
+        $sql_query = "UPDATE `appointment` SET `patient_id` = ?, `consultant_id` = ?, `health_issue` = ?, `date_time` = ?, `referrer_name` = ?, `referrer_clinic` = ? WHERE `id` = ?";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("iissi", $patient_id, $consultant_id, $health_issue, $date_time, $id);
+            $stmt->bind_param("iissssi", $patient_id, $consultant_id, $health_issue, $date_time, $referrer_name, $referrer_clinic, $id);
             $res = $stmt->execute();
             $stmt->close();
             if ($res) {

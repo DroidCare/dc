@@ -281,6 +281,8 @@ POST /appointment/edit
 | `consultant_id`   | `integer` | User id of type 'consultant'
 | `date_time`       | `string` | YYYY-MM-DD HH:mm:SS; `Y-M-D H:i:s`
 | `health_issue`    | `string` | Text describing the health issue
+| `referrer_name`   | `string` | may be `NULL` if `type` is not '`referral`'
+| `referrer_clinic` | `string` | may be `NULL` if `type` is not '`referral`'
 | `session_id`      | `string` | Session id, returned from `/user/login`
 
 #### Return
