@@ -4,7 +4,7 @@ For CZ2006 Software Engineering project at Nanyang Technological University (A.Y
 
 Front-end Android app can be found at [DroidCare](https://github.com/DroidCare/DroidCare)
 
-## Dependency (via Composer)
+## Dependencies (via Composer)
 * [klein.php](https://github.com/chriso/klein.php)
 * [PHPMailer](https://github.com/PHPMailer/PHPMailer)
 
