@@ -73,18 +73,26 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
         $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `type`)
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("ssssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
+            $stmt->bind_param("sssssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
             $res = $stmt->execute();
-            $stmt->close();
             if ($res) {
                 $service->flash("User successfully registered.", 'success');
+                $return['status'] = 0;
+                $return['message'] = $service->flashes('success');
+            } else {
+                $service->flash("Failed to insert data to database: " . $stmt->error, 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
             }
+            $stmt->close();
+        } else {
+            $service->flash("SQL statement error ", 'error');
+            $return['status'] = -1;
+            $return['message'] = $service->flashes('error');
         }
-        $return['status'] = 0;
-        $return['message'] = $service->flashes('success');
     } else {
         $return['status'] = -1;
         $return['message'] = $error_msg;

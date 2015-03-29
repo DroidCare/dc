@@ -71,9 +71,8 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
             $stmt->bind_param("iissssssis", $patient_id, $consultant_id, $date_time, $health_issue, $attachment, $type, $referrer_name, $referrer_clinic, $previous_id, $status);
             $res = $stmt->execute();
-            $stmt->close();
-            if ($res) {
-
+            if ($res && $stmt->affected_rows > 0) {
+                $stmt->close();
                 $sql_query = "SELECT LAST_INSERT_ID()";
                 $stmt = $mysqli->prepare($sql_query);
                 $res = $stmt->execute();
@@ -85,10 +84,20 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                     "message" => "Appointment successfully created."
                 );
                 $service->flash(json_encode($result), 'success');
+                $return['status'] = 0;
+                $return['message'] = json_decode($service->flashes('success')[0]);
+            } else {
+                $service->flash("Failed to insert data to database: " . $stmt->error, 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
+                $stmt->close();
             }
+            
+        } else {
+            $service->flash("SQL statement error", 'error');
+            $return['status'] = -1;
+            $return['message'] = $service->flashes('error');
         }
-        $return['status'] = 0;
-        $return['message'] = json_decode($service->flashes('success')[0]);
 
     } else {
         $return['status'] = -1;

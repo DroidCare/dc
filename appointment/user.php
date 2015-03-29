@@ -45,7 +45,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `appointment`.`id`, `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `consultant`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND ";
+        $sql_query = "SELECT `appointment`.`id`, `patient_id`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `consultant`.`full_name` AS `consultant_name`, `date_time`, `health_issue`, `attachment`, `appointment`.`type`, `referrer_name`, `referrer_clinic`, `previous_id`, `remarks`, `status` FROM `appointment`, `user` `patient`, `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND ";
         if ($_SESSION['user_type'] === 'patient') {
             $sql_query .= "`patient_id` = ?";
         } else if ($_SESSION['user_type'] === 'consultant') {

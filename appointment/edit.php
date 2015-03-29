@@ -56,14 +56,22 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
         if ($stmt) {
             $stmt->bind_param("iissssi", $patient_id, $consultant_id, $health_issue, $date_time, $referrer_name, $referrer_clinic, $id);
             $res = $stmt->execute();
-            $stmt->close();
-            if ($res) {
+            if ($res && $stmt->affected_rows > 0) {
                 $service->flash("Appointment successfully updated.", 'success');
                 $return['status'] = 0;
                 $return['message'] = $service->flashes('success');
+            } else if ($stmt->affected_rows == 0) {
+                $service->flash("Appointment not found", 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
+            } else {
+                $service->flash("Failed to update data to database: " . $stmt->error, 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
             }
+            $stmt->close();
         } else {
-            $service->flash("Appointment not found", 'error');
+            $service->flash("SQL statement error", 'error');
             $return['status'] = -1;
             $return['message'] = $service->flashes('error');
         }

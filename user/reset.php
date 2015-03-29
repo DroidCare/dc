@@ -54,13 +54,20 @@ $this->respond('GET', '/[s:password_token]', function ($request, $response, $ser
                     $stmt->bind_param("sssi", $password, $token_expiry, $password_token, $user_id);
                     $res = $stmt->execute();
                     $stmt->store_result();
-                    $stmt->close();
 
-                    $service->flash('Your password has been changed to: ' . $password_plain, 'success');
-                    $return['status'] = 0;
-                    $return['message'] = $service->flashes('success');
+                    
+                    if ($res && $stmt->affected_rows > 0) {
+                        $service->flash('Your password has been changed to: ' . $password_plain, 'success');
+                        $return['status'] = 0;
+                        $return['message'] = $service->flashes('success');
+                    } else {
+                        $service->flash('Database error: '. $mysqli->error, 'error');
+                        $return['status'] = 0;
+                        $return['message'] = $service->flashes('error');
+                    }
+                    $stmt->close();
                 } else {
-                    $service->flash('Database error: '. $mysqli->error, 'error');
+                    $service->flash('SQL statement error', 'error');
                     $return['status'] = 0;
                     $return['message'] = $service->flashes('error');
                 }

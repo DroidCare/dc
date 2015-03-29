@@ -68,14 +68,22 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
         if ($stmt) {
             $stmt->bind_param("ssssssssssi", $password, $full_name, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type, $id);
             $res = $stmt->execute();
-            $stmt->close();
-            if ($res) {
+            if ($res && $stmt->affected_rows > 0) {
                 $service->flash("User profile successfully updated.", 'success');
                 $return['status'] = 0;
                 $return['message'] = $service->flashes('success');
+            } else if ($stmt->affected_rows == 0) {
+                $service->flash("User not found", 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
+            } else {
+                $service->flash("Failed to update data to database: " . $stmt->error, 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
             }
+            $stmt->close();
         } else {
-            $service->flash("User not found", 'error');
+            $service->flash("SQL statement error", 'error');
             $return['status'] = -1;
             $return['message'] = $service->flashes('error');
         }

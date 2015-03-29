@@ -37,8 +37,8 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
         if ($stmt) {
             $stmt->bind_param("ssi", $status, $remarks, $id);
             $res = $stmt->execute();
-            $stmt->close();
-            if ($res) {
+            if ($res && $stmt->affected_rows > 0) {
+                $stmt->close();
                 // get patient's details
                 $sql_query = "SELECT `patient`.`email` AS `patient_email`, `patient`.`full_name` AS `patient_name`, `consultant_id`, `consultant`.`full_name` AS `consultant_name`, `date_time`, `remarks`, `status` FROM `appointment` INNER JOIN `user` `patient` INNER JOIN `user` `consultant` WHERE `patient_id` = `patient`.`id` AND `consultant_id` = `consultant`.`id` AND `appointment`.`id` = ? LIMIT 0,1";
                 $stmt = $mysqli->prepare($sql_query);
@@ -89,9 +89,21 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                     $return['status'] = -1;
                     $return['message'] = $service->flashes('error');
                 }
+            } else if ($stmt->affected_rows == 0) {
+                $service->flash("Appointment not found", 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
+                $stmt->close(); 
+            } else {
+                $service->flash("Failed to update data to database: " . $stmt->error, 'error');
+                $return['status'] = -1;
+                $return['message'] = $service->flashes('error');
+                $stmt->close(); 
             }
+            
+
         } else {
-            $service->flash("Appointment not found", 'error');
+            $service->flash("SQL statement error", 'error');
             $return['status'] = -1;
             $return['message'] = $service->flashes('error');
         }
