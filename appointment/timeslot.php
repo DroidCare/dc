@@ -29,18 +29,30 @@ $this->respond('/[i:user_id]/[:date]', function ($request, $response, $service, 
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `date_time` FROM `appointment` WHERE `consultant_id` = ?";
-        $sql_query .= " AND `status` != 'cancelled'";
-
+        $sql_query = "SELECT `type` FROM `user` WHERE `id` = ?";
         $stmt = $mysqli->prepare($sql_query);
-        $num_rows = 0;
-        if ($stmt) {
-            $stmt->bind_param("i", $user_id);
-            $res = $stmt->execute();
-            $stmt->store_result();
-            $num_rows = $stmt->num_rows;
+        $stmt->bind_param("i", $user_id);
+        $res = $stmt->execute();
+        $stmt->bind_result($user_type);
+        $stmt->fetch();
+        $stmt->close();
+        if ($user_type !== 'consultant') {
+            $service->flash("Timeslot not available for this type of user", 'error');
+            $return['status'] = -1;
+            $return['message'] = $service->flashes('error');
 
-            if ($num_rows > 0) {
+        } else {
+
+            $sql_query = "SELECT `date_time` FROM `appointment` WHERE `consultant_id` = ? AND `status` != 'cancelled'";
+
+            $stmt = $mysqli->prepare($sql_query);
+            $num_rows = 0;
+            if ($stmt) {
+                $stmt->bind_param("i", $user_id);
+                $res = $stmt->execute();
+                $stmt->store_result();
+            // $num_rows = $stmt->num_rows;
+            
                 $result = [];
                 $candidate = [];
                 // assume open from 0900 till 2100; and 1 slot is 30 mins
@@ -56,21 +68,15 @@ $this->respond('/[i:user_id]/[:date]', function ($request, $response, $service, 
                         unset($candidate[$key]);
                     }
                 }
-                foreach($candidate as $value) {
+                foreach($candidate as $value)
                     array_push($result, $value);
-                }
 
                 $return['status'] = 0;
                 $return['message'] = $result;
-
-            } else {
-                $service->flash("User not found", 'error');
-                $return['status'] = -1;
-                $return['message'] = $service->flashes('error');
+                
+                $stmt->close();
             }
-            $stmt->close();
         }
-
         
     } else {
         $return['status'] = -1;
