@@ -1,6 +1,6 @@
 <?php
 /*
-### Update Appointment Status (by Consultant)
+### Update Appointment Status
 ```
 POST appointment/status
 ```
@@ -26,12 +26,6 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');
     if (is_empty(trim($status)))        $service->flash("Please enter the appointment status.", 'error');
     
-    /*
-    if ($_SESSION['user_type'] === 'patient') {
-        $service->flash("Your account type couldn't update the appointment status.", 'error');
-    }
-    */
-    
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
@@ -51,47 +45,55 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                 $stmt->bind_result($patient_email, $patient_name, $consultant_id, $consultant_name, $date_time, $remarks, $status);
                 $stmt->fetch();
                 $stmt->close();
-                $remarks_html = is_empty($remarks) ? "." : " with the following remarks: </p><p>" . $remarks;
-                $remarks_plain = is_empty($remarks) ? "." : " with the following remarks: \r\n" . $remarks;
-                // Send e-mail
-                $recipient  = $patient_email;
-                $subject = '[DroidCare] Appointment Status Updated';
-                $body = "
-                <html>
-                <head>
-                  <title>[DroidCare] Appointment Status Updated</title>
-                </head>
-                <body>
-                  <p>Dear $patient_name,</p>
-                  <p>This is a notice that your appointment with $consultant_name at " . date("l, j F Y, H:i", strtotime($date_time)) . " is $status"."$remarks_html</p>
-                  <br><br>
-                  <p>Sincerely,</p>
-                  <p>DroidCare team</p>
-                </body>
-                </html>
-                ";
-                $altBody = "Dear $patient_name,\r\n"
-                  ."This is a notice that your appointment with $consultant_name at " . date("l, j F Y, H:i", strtotime($date_time)) . " is $status"."$remarks_plain.\r\n"
-                  ."Sincerely,\r\n"
-                  ."DroidCare team";
 
-                // Send e-mail via PHPMailer
-                $mail = $app->mail;
-                $mail->addAddress($recipient);     // Add a recipient
+                if ($_SESSION['user_type'] !== 'patient') {
+                    // Send e-mail to patient
+                    $remarks_html = is_empty($remarks) ? "." : " with the following remarks: </p><p>" . $remarks;
+                    $remarks_plain = is_empty($remarks) ? "." : " with the following remarks: \r\n" . $remarks;
 
-                $mail->Subject = $subject;
-                $mail->Body    = $body;
-                $mail->AltBody = $altBody;
+                    $recipient  = $patient_email;
+                    $subject = '[DroidCare] Appointment Status Updated';
+                    $body = "
+                    <html>
+                    <head>
+                      <title>[DroidCare] Appointment Status Updated</title>
+                    </head>
+                    <body>
+                      <p>Dear $patient_name,</p>
+                      <p>This is a notice that your appointment with $consultant_name at " . date("l, j F Y, H:i", strtotime($date_time)) . " is $status"."$remarks_html</p>
+                      <br><br>
+                      <p>Sincerely,</p>
+                      <p>DroidCare team</p>
+                    </body>
+                    </html>
+                    ";
+                    $altBody = "Dear $patient_name,\r\n"
+                      ."This is a notice that your appointment with $consultant_name at " . date("l, j F Y, H:i", strtotime($date_time)) . " is $status"."$remarks_plain.\r\n"
+                      ."Sincerely,\r\n"
+                      ."DroidCare team";
 
-                if ($mail->send()) {
-                    $service->flash("Appointment status successfully updated and notification email sent.", 'success');
+                    // Send e-mail via PHPMailer
+                    $mail = $app->mail;
+                    $mail->addAddress($recipient);     // Add a recipient
 
+                    $mail->Subject = $subject;
+                    $mail->Body    = $body;
+                    $mail->AltBody = $altBody;
+
+                    if ($mail->send()) {
+                        $service->flash("Appointment status successfully updated and notification email sent.", 'success');
+
+                        $return['status'] = 0;
+                        $return['message'] = $service->flashes('success');
+                    } else {
+                        $service->flash("Appointment status successfully updated but notification email failed to sent. " . $mail->ErrorInfo, 'error');
+                        $return['status'] = -1;
+                        $return['message'] = $service->flashes('error');
+                    }
+                } else { // if user_type is patient
+                    $service->flash("Appointment status successfully updated", 'success');
                     $return['status'] = 0;
                     $return['message'] = $service->flashes('success');
-                } else {
-                    $service->flash("Appointment status successfully updated but notification email failed to sent. " . $mail->ErrorInfo, 'error');
-                    $return['status'] = -1;
-                    $return['message'] = $service->flashes('error');
                 }
             } else if ($stmt->affected_rows == 0) {
                 $service->flash("Appointment not found", 'error');
