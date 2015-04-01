@@ -17,6 +17,7 @@ POST /user/[i:id]
   * `email`
   * `full_name`
   * `address`
+  * `phone_number`
   * `gender`: 'male', or 'female'
   * `passport_number`
   * `nationality`
@@ -54,13 +55,14 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
             $num_rows = $stmt->num_rows;
 
             if ($num_rows > 0) {
-                $stmt->bind_result($full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $specialization, $type);
+                $stmt->bind_result($full_name, $email, $address, $phone_number, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $specialization, $type);
                 $stmt->fetch();
                 $result = array(
                     "id" => $id,
                     "email" => $email,
                     "full_name" => $full_name,
                     "address" => $address,
+                    "phone_number" => $phone_number,
                     "gender" => $gender,
                     "passport_number" => $passport_number,
                     "nationality" => $nationality,
