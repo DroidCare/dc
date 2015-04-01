@@ -28,6 +28,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $password = $mysqli->escape_string($request->param('password'));
     $full_name = $mysqli->escape_string($request->param('full_name'));
     $address = $mysqli->escape_string($request->param('address'));
+    $phone_number = $mysqli->escape_string($request->param('phone_number'));
     $gender = $mysqli->escape_string($request->param('gender'));
     $passport_number = $mysqli->escape_string($request->param('passport_number'));
     $nationality = $mysqli->escape_string($request->param('nationality'));
@@ -44,6 +45,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (strlen($password) < 6)              $service->flash("Your password must be more than 6 characters.", 'error');
     if (is_empty(trim($full_name)))         $service->flash("Please enter your full name.", 'error');
     if (is_empty(trim($address)))           $service->flash("Please enter your address.", 'error');
+    if (is_empty(trim($phone_number)))      $service->flash("Please enter your phone number.", 'error');
     if (is_empty(trim($gender)))            $service->flash("Please specify your gender.", 'error');
     if (is_empty(trim($passport_number)))   $service->flash("Please enter your passport number.", 'error');
     if (is_empty(trim($nationality)))       $service->flash("Please enter your nationality.", 'error');
@@ -63,10 +65,10 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         $password = hash('sha512', hash('whirlpool', $password));
-        $sql_query = "UPDATE `user` SET `password` = ?, `full_name` = ?, `address` = ?, `gender` = ?, `passport_number` = ?, `nationality` = ?, `date_of_birth` = ?, `notification` = ?, `location` = ?, `type` = ? WHERE `id` = ?";
+        $sql_query = "UPDATE `user` SET `password` = ?, `full_name` = ?, `address` = ?, `phone_number` = ?, `gender` = ?, `passport_number` = ?, `nationality` = ?, `date_of_birth` = ?, `notification` = ?, `location` = ?, `type` = ? WHERE `id` = ?";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("ssssssssssi", $password, $full_name, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type, $id);
+            $stmt->bind_param("sssssssssssi", $password, $full_name, $address, $phone_number, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type, $id);
             $res = $stmt->execute();
             if ($res && $stmt->affected_rows > 0) {
                 $service->flash("User profile successfully updated.", 'success');
