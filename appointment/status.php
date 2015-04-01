@@ -25,9 +25,13 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     // error checking
     if (is_empty(trim($id)))            $service->flash("Please enter the appointment id.", 'error');
     if (is_empty(trim($status)))        $service->flash("Please enter the appointment status.", 'error');
+    
+    /*
     if ($_SESSION['user_type'] === 'patient') {
         $service->flash("Your account type couldn't update the appointment status.", 'error');
     }
+    */
+    
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
