@@ -64,7 +64,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                         </body>
                         </html>
                         ";
-                        $altBody = "Dear $patient_name,\r\n"
+                        $altBody = "Dear $consultant_name,\r\n"
                           ."You have a pending appointment which is due in 2 days, " . date("l, j F Y, H:i", strtotime($date_time)) . " with $patient_name.\r\n"
                           ."Please respond to the appointment request as soon as possible.\r\n\r\n"
                           ."Sincerely,\r\n"
