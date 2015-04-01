@@ -10,6 +10,7 @@ POST /user/register
 * `password`
 * `full_name`
 * `address`
+* `phone_number`
 * `gender`: 'male' or 'female'
 * `passport_number`
 * `nationality`
@@ -28,6 +29,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     $full_name = $mysqli->escape_string($request->param('full_name'));
     $email = $mysqli->escape_string($request->param('email'));
     $address = $mysqli->escape_string($request->param('address'));
+    $phone_number = $mysqli->escape_string($request->param('phone_number'));
     $gender = $mysqli->escape_string($request->param('gender'));
     $passport_number = $mysqli->escape_string($request->param('passport_number'));
     $nationality = $mysqli->escape_string($request->param('nationality'));
@@ -43,6 +45,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
                                             $service->flash("Please enter a valid e-mail address.", 'error');
     if (is_empty(trim($address)))           $service->flash("Please enter your address.", 'error');
+    if (is_empty(trim($phone_number)))      $service->flash("Please enter your phone number.", 'error');
     if (is_empty(trim($gender)))            $service->flash("Please specify your gender.", 'error');
     if (is_empty(trim($passport_number)))   $service->flash("Please enter your passport number.", 'error');
     if (is_empty(trim($nationality)))       $service->flash("Please enter your nationality.", 'error');
@@ -72,11 +75,11 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
 
     if (is_empty($error_msg)) {
         $password = hash('sha512',hash('whirlpool', $password));
-        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `type`)
-                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql_query = "INSERT INTO user(`password`, `full_name`, `email`, `address`, `phone_number`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `type`)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("sssssssssss", $password, $full_name, $email, $address, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
+            $stmt->bind_param("sssssssssss", $password, $full_name, $email, $address, $phone_number, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
             $res = $stmt->execute();
             if ($res) {
                 $service->flash("User successfully registered.", 'success');
