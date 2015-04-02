@@ -45,7 +45,7 @@ $this->respond('POST', '/?[i:id]?', function ($request, $response, $service, $ap
     $error_msg = $service->flashes('error');
 
     if (is_empty($error_msg)) {
-        $sql_query = "SELECT `full_name`, `email`, `address`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `specialization`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
+        $sql_query = "SELECT `full_name`, `email`, `address`, `phone_number`, `gender`, `passport_number`, `nationality`, `date_of_birth`, `notification`, `location`, `specialization`, `type` FROM `user` WHERE `id` = ? LIMIT 0,1";
         $stmt = $mysqli->prepare($sql_query);
         $num_rows = 0;
         if ($stmt) {
