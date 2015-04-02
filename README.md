@@ -44,8 +44,9 @@ POST /user/register
 | `password`        | `string` | User's password, 6-32 character long
 | `full_name`       | `string` | User's full name
 | `address`         | `string` | User's address
-| `gender`          | `string` | "`male`" or "`female`"
+| `phone_number`    | `string` | User's phone_number
 | `passport_number` | `string` | User's passport number
+| `gender`          | `string` | "`male`" or "`female`"
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
 | `notification`    | `string` | Notification preference: "`local`", "`email`", "`sms`", or "`all`"
@@ -89,6 +90,7 @@ POST /user/
   * `email`
   * `full_name`
   * `address`
+  * `phone_number`
   * `gender`: 'male', or 'female'
   * `passport_number`
   * `nationality`
@@ -111,8 +113,9 @@ POST /user/update
 | `password`        | `string` | User's password, 6-32 character long
 | `full_name`       | `string` | User's full name
 | `address`         | `string` | User's address
-| `gender`          | `string` | "`Male`" or "`Female`"
+| `phone_number`    | `string` | User's phone_number
 | `passport_number` | `string` | User's passport number
+| `gender`          | `string` | "`Male`" or "`Female`"
 | `nationality`     | `string` | User's nationality
 | `date_of_birth`   | `string` | Date of Birth, in `YYYY-MM-DD` format.
 | `notification`    | `string` | Notification preference: "`local`", "`email`", "`sms`", or "`all`"
