@@ -79,7 +79,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $mysqli->prepare($sql_query);
         if ($stmt) {
-            $stmt->bind_param("sssssssssss", $password, $full_name, $email, $address, $phone_number, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
+            $stmt->bind_param("ssssssssssss", $password, $full_name, $email, $address, $phone_number, $gender, $passport_number, $nationality, $date_of_birth, $notification, $location, $type);
             $res = $stmt->execute();
             if ($res) {
                 $service->flash("User successfully registered.", 'success');
