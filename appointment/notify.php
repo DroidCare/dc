@@ -111,6 +111,8 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                             $return['status'] = -1;
                             $return['message'] = $service->flashes('error');
                         } else {
+                            $mail->clearAddresses();
+                            
                             // Remind the consultant
                             $recipient  = $consultant_email;
                             $subject = '[DroidCare] Appointment Reminder';
