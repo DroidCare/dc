@@ -37,6 +37,7 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
             if ($num_rows > 0) {
                 $stmt->bind_result($patient_email, $patient_name, $consultant_id, $consultant_name, $consultant_email, $date_time, $health_issue, $type, $remarks, $status);
                 $stmt->fetch();
+                $fail = false;
 
                 // Send e-mail
                 if ($status == 'cancelled' || $status == 'rejected' || $status == 'finished') {
@@ -97,27 +98,70 @@ $this->respond('POST', '/?', function ($request, $response, $service, $app) {
                           ."Please arrive at the clinic 5 minutes before the stated time.\r\n\r\n"
                           ."Sincerely,\r\n"
                           ."DroidCare team";
-                    }
-                    // Send e-mail via PHPMailer
-                    $mail = $app->mail;
-                    $mail->addAddress($recipient);     // Add a recipient
+                        // Send e-mail via PHPMailer
+                        $mail = $app->mail;
+                        $mail->addAddress($recipient);     // Add a recipient
 
-                    $mail->Subject = $subject;
-                    $mail->Body    = $body;
-                    $mail->AltBody = $altBody;
+                        $mail->Subject = $subject;
+                        $mail->Body    = $body;
+                        $mail->AltBody = $altBody;
+                        if (!$mail->send()) {
+                            $fail = true;
+                            $service->flash("Failed to send e-mail." . $mail->ErrorInfo, 'error');
+                            $return['status'] = -1;
+                            $return['message'] = $service->flashes('error');
+                        } else {
+                            // Remind the consultant
+                            $recipient  = $consultant_email;
+                            $subject = '[DroidCare] Appointment Reminder';
+                            $body = "
+                            <html>
+                            <head>
+                              <title>[DroidCare] Appointment Reminder</title>
+                            </head>
+                            <body>
+                              <p>Dear $consultant_name,</p>
+                              <p>This is a reminder that you have an appointment with $patient_name at " . date("l, j F Y, H:i", strtotime($date_time)) . ".</p>
+                              <p>The health issue to be discussed is: $health_issue.</p>
 
-                    if ($mail->send()) {
-                        if ($status == 'pending')
-                            $service->flash("Appointment reminder e-mail sent to consultant.", 'success');
-                        else
-                            $service->flash("Appointment reminder e-mail sent to patient.", 'success');
-                        $return['status'] = 0;
-                        $return['message'] = $service->flashes('success');
-                    } else {
-                        $service->flash("Failed to send e-mail." . $mail->ErrorInfo, 'error');
-                        $return['status'] = -1;
-                        $return['message'] = $service->flashes('error');
+                              <p>Please arrive at the clinic 5 minutes before the stated time.</p>
+                              <br><br>
+                              <p>Sincerely,</p>
+                              <p>DroidCare team</p>
+                            </body>
+                            </html>
+                            ";
+                            $altBody = "Dear $consultant_name,\r\n"
+                              ."This is a reminder that you have an appointment with $patient_name at " . date("l, j F Y, H:i", strtotime($date_time)) . ".\r\n"
+                              ."The health issue to be discussed is: $health_issue.\r\n"
+                              ."Please arrive at the clinic 5 minutes before the stated time.\r\n\r\n"
+                              ."Sincerely,\r\n"
+                              ."DroidCare team";
+                        }
                     }
+                    if (!$fail) {
+                        // Send e-mail via PHPMailer
+                        $mail = $app->mail;
+                        $mail->addAddress($recipient);     // Add a recipient
+
+                        $mail->Subject = $subject;
+                        $mail->Body    = $body;
+                        $mail->AltBody = $altBody;
+
+                        if ($mail->send()) {
+                            if ($status == 'pending')
+                                $service->flash("Appointment reminder e-mail sent to consultant.", 'success');
+                            else
+                                $service->flash("Appointment reminder e-mail sent to patient & consultant.", 'success');
+                            $return['status'] = 0;
+                            $return['message'] = $service->flashes('success');
+                        } else {
+                            $service->flash("Failed to send e-mail." . $mail->ErrorInfo, 'error');
+                            $return['status'] = -1;
+                            $return['message'] = $service->flashes('error');
+                        }
+                    }
+
                 }
             } else {
                 $service->flash("Appointment not found", 'error');
