@@ -1,6 +1,6 @@
 {
     "require": {
         "klein/klein": "~2.1",
-        "phpmailer/phpmailer": "5.2.9"
+        "phpmailer/phpmailer": "5.2.27"
     }
 }
